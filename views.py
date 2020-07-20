@@ -1,4 +1,10 @@
 from settings import templates
+from starlette.responses import RedirectResponse
+
+from settings import AUTH_ISSUER
+
+async def authorize(request):
+    return RedirectResponse(url='https://' + AUTH_ISSUER + '/authorize')
 
 async def error(request):
     """
