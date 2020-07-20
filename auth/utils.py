@@ -1,10 +1,7 @@
 from starlette.responses import JSONResponse
+from settings import AUTH_ISSUER, AUTH_AUDIENCE, AUTH_ALGORITHMS
 
 from jose import jwt
-
-AUTH_ISSUER = 'YOUR_AUTH0_DOMAIN'
-AUTH_AUDIENCE = #_API_AUDIENCE
-AUTH_ALGORITHMS = ["RS256"]
 
 class AuthError(Exception):
     def __init__(self, error, status_code):

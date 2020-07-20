@@ -1,4 +1,4 @@
 uvicorn
+aiofiles
 starlette
-starlette-oauth2-api
 pydantic

@@ -8,17 +8,12 @@ from starlette.middleware import Middleware
 from starlette.middleware.cors import CORSMiddleware
 
 from auth.utils import AuthError, handle_auth_error
-from .views import index, error
-
-AUTH_ISSUER = 'chromakey.us.auth0.com'
-AUTH_AUDIENCE = 'https://chromakey.io/authorize'
-AUTH_ALGORITHMS = ["RS256"]
-
-templates = Jinja2Templates(directory='templates')
+from views import index, error
+from settings import DEBUG
 
 routes = [
-    Route[('/', endpoint=index, name="index"),
-    Mount[('/assets', StaticFiles(directory="assets"), name="assets")
+    Route('/', endpoint=index, name="index"),
+    Mount('/assets', StaticFiles(directory="assets"), name="assets")
     ]
 
 middleware = [
