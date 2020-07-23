@@ -1,3 +1,8 @@
+import json
+
+from functools import wraps
+from urllib.request import urlopen
+
 from starlette.responses import JSONResponse
 from settings import AUTH_ISSUER, AUTH_AUDIENCE, AUTH_ALGORITHMS
 
@@ -23,8 +28,8 @@ def get_token_auth_header(request):
                         "description":
                             "Authorization header is expected"}, 401)
     parts = auth.split()
-
-    if parts[0].lower() != "bearer":
+    print(parts)
+    if parts[0].lower() != "bearer:":
         raise AuthError({"code": "invalid_header",
                         "description":
                             "Authorization header must start with"
@@ -46,9 +51,10 @@ def requires_auth(f):
     """
     @wraps(f)
     def decorated(*args, **kwargs):
+        request = args[0]
         token = get_token_auth_header(request)
         #TODO:async
-        jsonurl = urlopen("https://"+AUTH0_DOMAIN+"/.well-known/jwks.json")
+        jsonurl = urlopen("https://"+AUTH_ISSUER+"/.well-known/jwks.json")
         #TODO:async
         jwks = json.loads(jsonurl.read())
         unverified_header = jwt.get_unverified_header(token)
@@ -62,6 +68,12 @@ def requires_auth(f):
                     "n": key["n"],
                     "e": key["e"]
                 }
+        print(token)
+        print(rsa_key)
+        print(AUTH_ALGORITHMS)
+        print(AUTH_AUDIENCE)
+        print(AUTH_ISSUER)
+
         if rsa_key:
             try:
                 payload = jwt.decode(
@@ -69,7 +81,7 @@ def requires_auth(f):
                     rsa_key,
                     algorithms=AUTH_ALGORITHMS,
                     audience=AUTH_AUDIENCE,
-                    issuer=AUTH_ISSUER
+                    issuer="https://{}/".format(AUTH_ISSUER)
                 )
             except jwt.ExpiredSignatureError:
                 raise AuthError({"code": "token_expired",
@@ -85,7 +97,7 @@ def requires_auth(f):
                                     "Unable to parse authentication"
                                     " token."}, 401)
             #TODO: create local user instance
-            request.user = payload
+            request.state.user = payload
             return f(*args, **kwargs)
         raise AuthError({"code": "invalid_header",
                         "description": "Unable to find appropriate key"}, 401)
