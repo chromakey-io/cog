@@ -1,5 +1,6 @@
 let auth0 = null;
 let token = null;
+let options = null;
 
 /*
 * Starts the authentication flow
@@ -7,7 +8,8 @@ let token = null;
 
 const login = async (targetUrl) => {
     try {
-        await auth0.loginWithRedirect({redirect_uri: 'http://localhost:8000/'});
+        /* TODO: redirect_uri -- dynamic */
+        await auth0.loginWithRedirect(options);
     } catch (err) {
             console.log("Log in failed", err);
     }
@@ -24,23 +26,24 @@ const logout = () => {
     }
 };
 
-async function configAuth0(){
-    const response = await fetch("/config");
-    const config = await response.json();
-    console.log(config);
+async function configureAuth0(){
+    const response = await fetch("/options");
+    options = await response.json();
+
+    console.log(options);
 
     const authClient = await createAuth0Client({
-        domain: config.domain,
-        client_id: config.client_id,
+        domain: options.domain,
+        client_id: options.client_id,
         scope: "openid profile email",
-        audience: config.audience
+        audience: options.audience
     });
 
     return authClient;
 };
 
 const load = async () => {
-    auth0 = await configAuth0();
+    auth0 = await configureAuth0();
     const isAuthenticated = await auth0.isAuthenticated();
     console.log(isAuthenticated);
     
@@ -61,17 +64,22 @@ const load = async () => {
         const data = await response.json();
 
         console.log(data);
-
     }
 
     /* 
     * after the first redirect we'll have two @params code and state
     */
+
     const query = window.location.search;
     const shouldParseResult = query.includes("code=") && query.includes("state=");
+
     /* 
     * complete the login process IF these @params exist
     */
+
+    if(!shouldParseResult && !isAuthenticated)
+        login();
+
     if (shouldParseResult && !isAuthenticated) {
       console.log("> Parsing redirect");
       try {
@@ -109,7 +117,7 @@ const load = async () => {
     */
 };
 
-document.getElementById('btn-login').addEventListener('click', login);
+//document.getElementById('btn-login').addEventListener('click', login);
 document.getElementById('btn-logout').addEventListener('click', logout);
 
 window.addEventListener('load', load);

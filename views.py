@@ -4,6 +4,14 @@ from auth.utils import requires_auth
 
 from settings import AUTH_ISSUER, AUTH_AUDIENCE, AUTH_CLIENT_ID
 
+def options(request):
+    json = {'domain': AUTH_ISSUER,
+            'audience': AUTH_AUDIENCE,
+            'client_id': AUTH_CLIENT_ID,
+            'redirect_uri': 'http://localhost:8000'
+    }
+    return JSONResponse(json)
+
 @requires_auth
 def private(request):
     response = "Hello from a private endpoint! You need to be authenticated to see this."
@@ -22,11 +30,3 @@ async def index(request):
     template = "login.html"
     context = {"request": request}
     return templates.TemplateResponse(template, context)
-
-async def config(request):
-    credentials = {
-        'domain': AUTH_ISSUER,
-        'client_id': AUTH_CLIENT_ID,
-        'audience': AUTH_AUDIENCE
-    }
-    return JSONResponse(credentials)

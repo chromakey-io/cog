@@ -2,10 +2,14 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>SPA SDK Sample</title>
-    <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.3/build/pure-min.css" integrity="sha384-cg6SkqEOCV1NbJoCu11+bm0NvBRc8IYLRGXkmNrqUBfTjmMYwNKPWBTIKyw9mHNJ" crossorigin="anonymous">
+    <title>Portland Cognitive Lab</title>
 
-    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+    <!-- Add support for Web Components to older browsers. -->
+    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+
+    <!-- Your application must load the Roboto and Material Icons fonts. -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Material+Icons&display=block" rel="stylesheet">
   </head>
 
   <body>
@@ -13,9 +17,11 @@
     <div class="splash-container">
       <div class="splash">
         <h2>SPA Authentication Sample</h2>
-        <p>Welcome to our page!</p>
-        <button id="btn-login">Log in</button>
-        <button id="btn-logout">Log out</button>
+            <p>Welcome  {% if request.state.user %}
+                        {{request.state.user}}
+                        {% endif %}
+            </p>
+        <mwc-button id="btn-logout">Log Out</mwc-button>
       </div>
     </div>
   <!-- other HTML -->

@@ -8,12 +8,12 @@ from starlette.middleware import Middleware
 from starlette.middleware.cors import CORSMiddleware
 
 from auth.utils import AuthError, handle_auth_error
-from views import index, authorize, error, config, private
+from views import index, authorize, error, options, private
 from settings import DEBUG
 
 routes = [
     Route('/', endpoint=index, name="index"),
-    Route('/config', endpoint=config, name="config"),
+    Route('/options', endpoint=options, name="options"),
     Route('/authorize', endpoint=authorize, name="authorize"),
     Route('/private', endpoint=private, name="private"),
 
