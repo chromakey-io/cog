@@ -14,6 +14,10 @@ def options(request):
 
 @requires_auth
 def private(request):
+    #
+    # get the user and do something with it
+    # user = database.get(id = request.state.user['sub'])
+    # 
     response = "Hello from a private endpoint! You need to be authenticated to see this."
     return JSONResponse({'message':response, 'user': request.state.user})
 

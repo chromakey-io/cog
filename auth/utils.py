@@ -1,4 +1,4 @@
-import json
+import httpx
 
 from functools import wraps
 from urllib.request import urlopen
@@ -7,6 +7,19 @@ from starlette.responses import JSONResponse
 from settings import AUTH_ISSUER, AUTH_AUDIENCE, AUTH_ALGORITHMS
 
 from jose import jwt
+
+try:
+    import ujson as json
+except ImportError:
+    import json
+
+def get_json_keys():
+    #async with httpx.AsyncClient() as client:
+    key_data = httpx.get("https://{}/.well-known/jwks.json".format(AUTH_ISSUER))
+    keys = json.loads(key_data.read())
+    return keys
+
+JWKS = get_json_keys()
 
 class AuthError(Exception):
     def __init__(self, error, status_code):
@@ -52,13 +65,10 @@ def requires_auth(f):
     def decorated(*args, **kwargs):
         request = args[0]
         token = get_token_auth_header(request)
-        #TODO:async
-        jsonurl = urlopen("https://{}/.well-known/jwks.json".format(AUTH_ISSUER))
-        #TODO:async
-        jwks = json.loads(jsonurl.read())
+
         unverified_header = jwt.get_unverified_header(token)
         rsa_key = {}
-        for key in jwks["keys"]:
+        for key in JWKS["keys"]:
             if key["kid"] == unverified_header["kid"]:
                 rsa_key = {
                     "kty": key["kty"],
@@ -67,8 +77,6 @@ def requires_auth(f):
                     "n": key["n"],
                     "e": key["e"]
                 }
-        print(unverified_header)
-        print(token)
         if rsa_key:
             try:
                 payload = jwt.decode(
@@ -92,7 +100,6 @@ def requires_auth(f):
                                     "Unable to parse authentication"
                                     " token."}, 401)
             #TODO: create local user instance
-            print(payload)
             request.state.user = payload
             return f(*args, **kwargs)
         raise AuthError({"code": "invalid_header",

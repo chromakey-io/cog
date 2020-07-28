@@ -36,8 +36,6 @@ async function configureAuth0(){
     const response = await fetch("/options");
     options = await response.json();
 
-    console.log(options);
-
     const authClient = await createAuth0Client({
         domain: options.domain,
         client_id: options.client_id,
@@ -51,20 +49,18 @@ async function configureAuth0(){
 const load = async () => {
     auth0 = await configureAuth0();
     const isAuthenticated = await auth0.isAuthenticated();
-    console.log(isAuthenticated);
     
     if(isAuthenticated) {
         const user = await auth0.getUser();
         console.log(user);
-        const accessToken = await auth0.getTokenSilently();
-        console.log(accessToken);
 
+        const accessToken = await auth0.getTokenSilently();
 
         const response = await fetch('http://localhost:8000/private', {
             method: 'GET',
             headers: {
                 Authorization: 'Bearer: ' + accessToken
-            }
+            },
         });
         
         const data = await response.json();
