@@ -17,7 +17,7 @@ const login = async (targetUrl) => {
         /* TODO: redirect_uri -- dynamic */
         await auth0.loginWithRedirect(options);
     } catch (err) {
-            console.log("Log in failed", err);
+        console.log("Log in failed", err);
     }
 };
 
@@ -52,7 +52,9 @@ const load = async () => {
     
     if(isAuthenticated) {
         const user = await auth0.getUser();
-        console.log(user);
+        const logged_in = document.querySelector('#logged-in');
+
+        logged_in.innerHTML = "Welcome: " + user.email;        
 
         const accessToken = await auth0.getTokenSilently();
 

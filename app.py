@@ -9,6 +9,7 @@ from starlette.middleware.cors import CORSMiddleware
 
 from auth.utils import AuthError, handle_auth_error
 from views import index, authorize, error, private
+
 from settings import DEBUG
 
 routes = [
