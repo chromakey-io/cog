@@ -9,14 +9,12 @@ from starlette.middleware.cors import CORSMiddleware
 
 from auth.utils import AuthError, handle_auth_error
 from views import index, authorize, error, private
-from auth.views import options
 
 from settings import DEBUG
 
 routes = [
     Route('/', endpoint=index, name="index"),
     Route('/authorize', endpoint=authorize, name="authorize"),
-    Route('/options', endpoint=options, name="options"),
     Route('/private', endpoint=private, name="private"),
 
     Mount('/dist', StaticFiles(directory="/home/noah/cog/dist"), name="dist")
