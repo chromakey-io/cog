@@ -4,30 +4,25 @@
     <meta charset="UTF-8" />
     <title>Portland Cognitive Lab</title>
 
-    <!-- Add support for Web Components to older browsers. -->
-    <script src="./node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
-
     <!-- Your application must load the Roboto and Material Icons fonts. -->
     <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Material+Icons&display=block" rel="stylesheet">
   </head>
 
-  <body>
-
-    <div class="splash-container">
-      <div class="splash">
-        <h2>SPA Authentication Sample</h2>
-            <p>Welcome  {% if request.state.user %}
-                        {{request.state.user}}
-                        {% endif %}
-            </p>
-        <mwc-button id="btn-logout">Log Out</mwc-button>
-      </div>
+  <body class="mdc-theme--background mdc-typography">
+  <mwc-top-app-bar-fixed centerTitle>
+    <div slot="title">Portland Cogntive Lab</div>
+    <mwc-icon-button icon="logout" id="btn-logout" slot="actionItems"></mwc-icon-button>
+    <div class="mdc-layout-grid" id="content"><!-- content -->
+        <div class="mdc-layout-grid__inner">
+            <div class="mdc-layout-grid__cell">
+                <h1 id="logged-in">Hooray!</h1>
+            </div>
+        </div>
     </div>
+  </mwc-top-app-bar-fixed>
   <!-- other HTML -->
-  
-  <!-- add the lines below existing code -->
-  <script src="https://cdn.auth0.com/js/auth0-spa-js/1.9/auth0-spa-js.production.js"></script>
-  <script src="/static/js/app.js"></script> 
+  <script src="/dist/bundle.js"></script> 
+  <link href="/dist/bundle.css" rel="stylesheet">
   </body>
 </html>

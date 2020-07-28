@@ -28,7 +28,6 @@ def get_token_auth_header(request):
                         "description":
                             "Authorization header is expected"}, 401)
     parts = auth.split()
-    print(parts)
     if parts[0].lower() != "bearer:":
         raise AuthError({"code": "invalid_header",
                         "description":
@@ -54,7 +53,7 @@ def requires_auth(f):
         request = args[0]
         token = get_token_auth_header(request)
         #TODO:async
-        jsonurl = urlopen("https://"+AUTH_ISSUER+"/.well-known/jwks.json")
+        jsonurl = urlopen("https://{}/.well-known/jwks.json".format(AUTH_ISSUER))
         #TODO:async
         jwks = json.loads(jsonurl.read())
         unverified_header = jwt.get_unverified_header(token)
@@ -68,12 +67,8 @@ def requires_auth(f):
                     "n": key["n"],
                     "e": key["e"]
                 }
+        print(unverified_header)
         print(token)
-        print(rsa_key)
-        print(AUTH_ALGORITHMS)
-        print(AUTH_AUDIENCE)
-        print(AUTH_ISSUER)
-
         if rsa_key:
             try:
                 payload = jwt.decode(
@@ -97,6 +92,7 @@ def requires_auth(f):
                                     "Unable to parse authentication"
                                     " token."}, 401)
             #TODO: create local user instance
+            print(payload)
             request.state.user = payload
             return f(*args, **kwargs)
         raise AuthError({"code": "invalid_header",

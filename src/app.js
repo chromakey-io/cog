@@ -1,3 +1,9 @@
+import createAuth0Client from '@auth0/auth0-spa-js';
+
+import '@material/mwc-button';
+import '@material/mwc-top-app-bar-fixed';
+import '@material/mwc-icon-button';
+
 let auth0 = null;
 let token = null;
 let options = null;
@@ -85,9 +91,6 @@ const load = async () => {
       try {
         const result = await auth0.handleRedirectCallback();
         /*
-        if (result.appState && result.appState.targetUrl) {
-          showContentFromUrl(result.appState.targetUrl);
-        }
         redirect to new page
         */
         console.log("Logged in!");
@@ -118,6 +121,8 @@ const load = async () => {
 };
 
 //document.getElementById('btn-login').addEventListener('click', login);
-document.getElementById('btn-logout').addEventListener('click', logout);
+const button = document.querySelector('#btn-logout');
+
+button.addEventListener('click', logout);
 
 window.addEventListener('load', load);

@@ -1,0 +1,22 @@
+@use "@material/theme" with (
+  $primary: #424242,
+  $secondary: #6d6d6d,
+  $background: #E1E2E1,
+);
+@use "@material/layout-grid/mdc-layout-grid";
+@use "@material/typography/mdc-typography";
+
+@import "@material/theme/mdc-theme";
+
+body {
+    margin: 0;
+}
+
+:root {
+  --mdc-theme-primary: #424242;
+  --mdc-theme-secondary: #6d6d6d;
+  --mdc-theme-surface:#102027;
+  --mdc-theme-background:#e1e2e1;
+  --mdc-theme-on-primary: #eee;
+  --mdc-theme-on-secondary: #1b1b1b;
+}

@@ -17,7 +17,7 @@ routes = [
     Route('/authorize', endpoint=authorize, name="authorize"),
     Route('/private', endpoint=private, name="private"),
 
-    Mount('/static/', StaticFiles(directory="/home/noah/cog/static"), name="static")
+    Mount('/dist', StaticFiles(directory="/home/noah/cog/dist"), name="dist")
     ]
 
 middleware = [
