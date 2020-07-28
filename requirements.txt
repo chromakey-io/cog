@@ -3,4 +3,5 @@ ujson
 uvicorn
 aiofiles
 starlette
+python-jose
 pydantic
