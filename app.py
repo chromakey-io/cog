@@ -13,7 +13,6 @@ from settings import DEBUG
 
 routes = [
     Route('/', endpoint=index, name="index"),
-    Route('/options', endpoint=options, name="options"),
     Route('/authorize', endpoint=authorize, name="authorize"),
     Route('/private', endpoint=private, name="private"),
 
