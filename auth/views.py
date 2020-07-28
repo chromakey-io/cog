@@ -1,3 +1,15 @@
+from starlette.responses import JSONResponse
+
+from settings import AUTH_ISSUER, AUTH_AUDIENCE, AUTH_CLIENT_ID
+
+def options(request):
+    json = {'domain': AUTH_ISSUER,
+            'audience': AUTH_AUDIENCE,
+            'client_id': AUTH_CLIENT_ID,
+            'redirect_uri': 'http://localhost:8000'
+    }
+    return JSONResponse(json)
+
 """
 from auth.utils import requires_auth, requires_scope
 from auth.utils import AuthError
