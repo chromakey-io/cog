@@ -11,6 +11,8 @@ __pycache__/
 build/
 develop-eggs/
 dist/
+package-lock.json
+node_modules/
 downloads/
 eggs/
 .eggs/
