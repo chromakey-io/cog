@@ -16,6 +16,7 @@ routes = [
     Route('/', endpoint=index, name="index"),
     Route('/authorize', endpoint=authorize, name="authorize"),
     Route('/private', endpoint=private, name="private"),
+    Route('/options', endpoint=options, name="options"),
 
     Mount('/dist', StaticFiles(directory="/home/noah/cog/dist"), name="dist")
     ]
