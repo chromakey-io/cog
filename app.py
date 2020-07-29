@@ -8,6 +8,8 @@ from starlette.middleware import Middleware
 from starlette.middleware.cors import CORSMiddleware
 
 from auth.utils import AuthError, handle_auth_error
+
+from auth.views import options
 from views import index, authorize, error, private
 
 from settings import DEBUG

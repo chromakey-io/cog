@@ -1,8 +1,15 @@
 import createAuth0Client from '@auth0/auth0-spa-js';
 
+import '@material/mwc-drawer';
+
 import '@material/mwc-button';
 import '@material/mwc-top-app-bar-fixed';
 import '@material/mwc-icon-button';
+
+import '@material/mwc-list/mwc-list.js';
+import '@material/mwc-list/mwc-list-item.js';
+
+import '@material/mwc-icon';
 
 let auth0 = null;
 let token = null;
@@ -53,8 +60,6 @@ const load = async () => {
     if(isAuthenticated) {
         const user = await auth0.getUser();
         const logged_in = document.querySelector('#logged-in');
-
-        logged_in.innerHTML = "Welcome: " + user.email;        
 
         const accessToken = await auth0.getTokenSilently();
 
@@ -124,3 +129,13 @@ const button = document.querySelector('#btn-logout');
 button.addEventListener('click', logout);
 
 window.addEventListener('load', load);
+
+
+const drawer = document.getElementsByTagName('mwc-drawer')[0];
+
+if (drawer) {
+  const container = drawer.parentNode;
+  container.addEventListener('MDCTopAppBar:nav', () => {
+    drawer.open = !drawer.open;
+  });
+}

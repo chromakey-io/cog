@@ -35,7 +35,9 @@
     "@material/button": "^7.0.0",
     "@material/layout-grid": "^7.0.0",
     "@material/mwc-button": "^0.17.2",
+    "@material/mwc-drawer": "^0.17.2",
     "@material/mwc-icon-button": "^0.17.2",
+    "@material/mwc-list": "^0.17.2",
     "@material/mwc-top-app-bar-fixed": "^0.17.2",
     "@material/theme": "^7.0.0",
     "@material/typography": "^7.0.0"
