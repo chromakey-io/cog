@@ -5,3 +5,6 @@ aiofiles
 starlette
 python-jose
 pydantic
+aiosqlite
+asyncpg
+tortoise-orm[accel]

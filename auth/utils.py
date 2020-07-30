@@ -62,7 +62,7 @@ def requires_auth(f):
     """Determines if the Access Token is valid
     """
     @wraps(f)
-    def decorated(*args, **kwargs):
+    async def decorated(*args, **kwargs):
         request = args[0]
         token = get_token_auth_header(request)
 

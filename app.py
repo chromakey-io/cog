@@ -7,9 +7,12 @@ from starlette.routing import Route, Mount
 from starlette.middleware import Middleware
 from starlette.middleware.cors import CORSMiddleware
 
+from tortoise.contrib.starlette import register_tortoise
+
 from auth.utils import AuthError, handle_auth_error
 
 from auth.views import options
+from subject.views import SubjectREST, subjects
 from views import index, authorize, error, private
 
 from settings import DEBUG
@@ -19,6 +22,9 @@ routes = [
     Route('/authorize', endpoint=authorize, name="authorize"),
     Route('/private', endpoint=private, name="private"),
     Route('/options', endpoint=options, name="options"),
+
+    Route('/subjects', endpoint=subjects, name="subjects"),
+    Route('/subjects/{id:int}', endpoint=SubjectREST, name="subject"),
 
     Mount('/dist', StaticFiles(directory="/home/noah/cog/dist"), name="dist")
     ]
@@ -32,6 +38,13 @@ exception_handlers = {
     }
 
 app = Starlette(routes=routes, middleware=middleware, exception_handlers=exception_handlers, debug=True)
+
+register_tortoise(
+    app, 
+    db_url = "sqlite://:memory:", 
+    modules = {"models": ["subject.models"]}, 
+    generate_schemas = True
+)
 
 if __name__ == "__main__":
     uvicorn.run(app, host='0.0.0.0', port=8000)
