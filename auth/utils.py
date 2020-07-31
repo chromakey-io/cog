@@ -13,11 +13,16 @@ try:
 except ImportError:
     import json
 
+"""async def get_json_keys():
+    async with httpx.AsyncClient() as client:
+        key_data = await client.get("https://{}/.well-known/jwks.json".format(AUTH_ISSUER))
+        keys = await key_data.aread()
+        return json.loads(keys)
+"""
 def get_json_keys():
-    #async with httpx.AsyncClient() as client:
     key_data = httpx.get("https://{}/.well-known/jwks.json".format(AUTH_ISSUER))
-    keys = json.loads(key_data.read())
-    return keys
+    keys = key_data.read()
+    return json.loads(keys)
 
 JWKS = get_json_keys()
 
@@ -58,13 +63,15 @@ def get_token_auth_header(request):
     token = parts[1]
     return token
 
-def requires_auth(f):
+def authenticated(func, scope=None):
     """Determines if the Access Token is valid
     """
-    @wraps(f)
+    @wraps(func)
     async def decorated(*args, **kwargs):
         request = args[0]
         token = get_token_auth_header(request)
+
+        if scope: permissions(scope, token)
 
         unverified_header = jwt.get_unverified_header(token)
         rsa_key = {}
@@ -99,23 +106,25 @@ def requires_auth(f):
                                 "description":
                                     "Unable to parse authentication"
                                     " token."}, 401)
-            #TODO: create local user instance
+            #create local user instance
             request.state.user = payload
-            return f(*args, **kwargs)
+            return await func(*args, **kwargs)
+
         raise AuthError({"code": "invalid_header",
                         "description": "Unable to find appropriate key"}, 401)
     return decorated
 
-def requires_scope(required_scope, request):
+def permissions(scope, token):
     """Determines if the required scope is present in the Access Token
     Args:
-        required_scope (str): The scope required to access the resource
+        scope (str): The scope required to access the resource
     """
-    token = get_token_auth_header(request)
     unverified_claims = jwt.get_unverified_claims(token)
     if unverified_claims.get("scope"):
-            token_scopes = unverified_claims["scope"].split()
-            for token_scope in token_scopes:
-                if token_scope == required_scope:
-                    return True
-    return False
+        token_scopes = unverified_claims["scope"].split()
+        for token_scope in token_scopes:
+            if token_scope == scope:
+                return
+
+    raise AuthError({"code": "invalid_scope",
+                    "description": "User does not have required permissions"})

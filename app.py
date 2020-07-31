@@ -1,4 +1,6 @@
+import logging
 import uvicorn
+
 from starlette.applications import Starlette
 
 from starlette.staticfiles import StaticFiles
@@ -12,10 +14,12 @@ from tortoise.contrib.starlette import register_tortoise
 from auth.utils import AuthError, handle_auth_error
 
 from auth.views import options
-from subject.views import SubjectREST, subjects
+from subject.views import SubjectRest, subjects
 from views import index, authorize, error, private
 
 from settings import DEBUG
+
+if DEBUG: logging.basicConfig(level=logging.DEBUG)
 
 routes = [
     Route('/', endpoint=index, name="index"),

@@ -53,28 +53,37 @@ async function configureAuth0(){
     return authClient;
 };
 
+async function insertSubject(subject){
+    console.log(subject);
+}
+
+async function subjectHandler(){
+    const user = await auth0.getUser();
+    const logged_in = document.querySelector('#logged-in');
+
+    const accessToken = await auth0.getTokenSilently();
+
+    const response = await fetch('http://localhost:8000/subjects', {
+        method: 'GET',
+        headers: {
+            Authorization: 'Bearer: ' + accessToken
+        },
+    });
+    if (response.status == 200){
+        const subjects = await response.json();
+        subjects.forEach(insertSubject);
+    } else {
+        console.log(response);
+    }
+};
+
 const load = async () => {
     auth0 = await configureAuth0();
     const isAuthenticated = await auth0.isAuthenticated();
     
     if(isAuthenticated) {
-        const user = await auth0.getUser();
-        const logged_in = document.querySelector('#logged-in');
-
-        const accessToken = await auth0.getTokenSilently();
-
-        const response = await fetch('http://localhost:8000/private', {
-            method: 'GET',
-            headers: {
-                Authorization: 'Bearer: ' + accessToken
-            },
-        });
-        
-        const data = await response.json();
-
-        console.log(data);
+        await subjectHandler();
     }
-
     /* 
     * after the first redirect we'll have two @params code and state
     */
@@ -87,55 +96,26 @@ const load = async () => {
     */
 
     if(!shouldParseResult && !isAuthenticated)
-        login();
+        await login();
 
     if (shouldParseResult && !isAuthenticated) {
       console.log("> Parsing redirect");
       try {
         const result = await auth0.handleRedirectCallback();
-        /*
-        redirect to new page
-        */
-        console.log("Logged in!");
+        await subjectHandler();
       } catch (err) {
         console.log("Error parsing redirect:", err);
       }
     }
-    /*const user = await auth0.getUser();
-    console.log(user);
-    */
-
-    /*set the global token variable for API usage
-    token = await auth0.getTokenSilently();
-    */
-
-    /* call an API
-
-    const response = await fetch('https://localhost:8000/private', {
-        method: 'GET',
-        headers: {
-            Authorization: 'Bearer: ${accessToken}'
-        }
-    });
-
-
-
-    */
 };
-
-//document.getElementById('btn-login').addEventListener('click', login);
-const button = document.querySelector('#btn-logout');
-
-button.addEventListener('click', logout);
 
 window.addEventListener('load', load);
 
+const button = document.querySelector('#btn-logout');
+button.addEventListener('click', logout);
 
 const drawer = document.getElementsByTagName('mwc-drawer')[0];
-
-if (drawer) {
-  const container = drawer.parentNode;
-  container.addEventListener('MDCTopAppBar:nav', () => {
+const container = drawer.parentNode;
+container.addEventListener('MDCTopAppBar:nav', () => {
     drawer.open = !drawer.open;
   });
-}

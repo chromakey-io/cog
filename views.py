@@ -1,9 +1,9 @@
 from settings import templates
 from starlette.responses import JSONResponse, RedirectResponse
-from auth.utils import requires_auth
+from auth.utils import authenticated 
 
-@requires_auth
-def private(request):
+@authenticated
+async def private(request):
     #
     # get the user and do something with it
     # user = database.get(id = request.state.user['sub'])

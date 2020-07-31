@@ -11,7 +11,7 @@ def options(request):
     return JSONResponse(json)
 
 """
-from auth.utils import requires_auth, requires_scope
+from auth.utils import authenticated
 from auth.utils import AuthError
 
 # This doesn't need authentication
@@ -20,17 +20,16 @@ def public():
     return JSONResponse({'message':response})
 
 # This needs authentication
-@requires_auth
+@authenticated
 def private():
     response = "Hello from a private endpoint! You need to be authenticated to see this."
     return JSONResponse({'message':response})
 
 # This needs authorization
 @APP.route("/api/private-scoped")
-@requires_auth
+@authenticated("read:messages")
 def private_scoped():
-    if requires_scope("read:messages"):
-        response = "Hello from a private endpoint! You need to be authenticated and have a scope of read:messages to see this."
+    response = "Hello from a private endpoint! You need to be authenticated and have a scope of read:messages to see this."
     return JSONResponse({'message':response})
 
     raise AuthError({
