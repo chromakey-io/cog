@@ -9,17 +9,20 @@ from starlette.routing import Route, Mount
 from starlette.middleware import Middleware
 from starlette.middleware.cors import CORSMiddleware
 
-from tortoise.contrib.starlette import register_tortoise
+#from tortoise.contrib.starlette import register_tortoise
+from tortoise import Tortoise
 
 from auth.utils import AuthError, handle_auth_error
 
 from auth.views import options
-from subject.views import SubjectRest, subjects
+from subject.views import SubjectREST, subjects
 from views import index, authorize, error, private
 
 from settings import DEBUG
+from debug import bootstrap
 
-if DEBUG: logging.basicConfig(level=logging.DEBUG)
+if DEBUG:
+    logging.basicConfig(level=logging.DEBUG)
 
 routes = [
     Route('/', endpoint=index, name="index"),
@@ -41,14 +44,18 @@ exception_handlers = {
     AuthError: handle_auth_error
     }
 
-app = Starlette(routes=routes, middleware=middleware, exception_handlers=exception_handlers, debug=True)
+async def init_orm() -> None:  # pylint: disable=W0612
+    await Tortoise.init(db_url="sqlite://:memory:", modules={"models": ["subject.models"]})
+    await Tortoise.generate_schemas()
 
-register_tortoise(
-    app, 
-    db_url = "sqlite://:memory:", 
-    modules = {"models": ["subject.models"]}, 
-    generate_schemas = True
-)
+async def close_orm() -> None:  # pylint: disable=W0612
+    await Tortoise.close_connections()
+
+if DEBUG:
+    app = Starlette(routes=routes, middleware=middleware, exception_handlers=exception_handlers, on_startup=[init_orm, bootstrap], on_shutdown=[close_orm], debug=True)
+else:
+    app = Starlette(routes=routes, middleware=middleware, exception_handlers=exceptions_handlers)
+    register_db()
 
 if __name__ == "__main__":
     uvicorn.run(app, host='0.0.0.0', port=8000)

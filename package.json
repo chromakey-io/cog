@@ -40,6 +40,7 @@
     "@material/mwc-list": "^0.17.2",
     "@material/mwc-top-app-bar-fixed": "^0.17.2",
     "@material/theme": "^7.0.0",
-    "@material/typography": "^7.0.0"
+    "@material/typography": "^7.0.0",
+    "lit-html": "^1.2.1"
   }
 }

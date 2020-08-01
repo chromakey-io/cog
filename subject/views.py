@@ -9,8 +9,16 @@ from starlette.endpoints import HTTPEndpoint
 from auth.utils import authenticated
 
 async def subjects(request: Request):
-    results = Subject.all()
-    return JSONResponse(results)
+    results = await Subject.all()
+    data = []
+    for result in results:
+        data.append({
+            'id':result.id,
+            'research_id': result.research_id,
+            'name': result.name
+        })
+    print(data)
+    return JSONResponse(data)
 
 class SubjectREST(HTTPEndpoint):
     @authenticated

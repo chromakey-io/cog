@@ -2,6 +2,8 @@ from tortoise import fields, models
 
 class Subject(models.Model):
     id = fields.IntField(pk=True)
+ 
+    research_id = fields.CharField(max_length=255)
 
     first_name = fields.CharField(max_length=255)
     last_name = fields.CharField(max_length=255)

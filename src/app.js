@@ -1,3 +1,5 @@
+import {html, render} from 'lit-html';
+
 import createAuth0Client from '@auth0/auth0-spa-js';
 
 import '@material/mwc-drawer';
@@ -53,8 +55,21 @@ async function configureAuth0(){
     return authClient;
 };
 
-async function insertSubject(subject){
-    console.log(subject);
+async function renderSubjects(subjects){
+    const content = document.getElementById('content');
+
+    let list = (subjects) => html`
+            <mwc-list id="subject-list" wrapfocus="" innerrole="navigation" innerarialabel="Patient List" itemroles="link" roottabbable="">
+                ${subjects.map((subject) => 
+                    html`<mwc-list-item class="subject" twoline="" graphic="icon" data-href="/patient/1" role="link" tabindex="0" aria-disable="false">
+                            <span>${subject.name}</span>
+                            <span slot="secondary">${subject.id}</span>
+                            <mwc-icon slot="graphic">face</mwc-icon>
+                        </mwc-list-item>`
+                )}
+            </mwc-list>`;
+
+    render(list(subjects), content);
 }
 
 async function subjectHandler(){
@@ -71,7 +86,8 @@ async function subjectHandler(){
     });
     if (response.status == 200){
         const subjects = await response.json();
-        subjects.forEach(insertSubject);
+        console.log(subjects);
+        await renderSubjects(subjects);
     } else {
         console.log(response);
     }
