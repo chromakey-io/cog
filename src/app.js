@@ -4,7 +4,6 @@ import createAuth0Client from '@auth0/auth0-spa-js';
 
 import '@material/mwc-drawer';
 
-import '@material/mwc-button';
 import '@material/mwc-top-app-bar-fixed';
 import '@material/mwc-icon-button';
 
@@ -57,7 +56,7 @@ async function configureAuth0(){
 
 async function renderSubjects(subjects){
     const content = document.getElementById('content');
-
+    
     let list = (subjects) => html`
             <mwc-list id="subject-list" wrapfocus="" innerrole="navigation" innerarialabel="Patient List" itemroles="link" roottabbable="">
                 ${subjects.map((subject) => 
