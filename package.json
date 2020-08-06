@@ -31,15 +31,18 @@
     "clean-webpack-plugin": "^3.0.0"
   },
   "dependencies": {
-    "@auth0/auth0-spa-js": "^1.11.0",
-    "@material/layout-grid": "^7.0.0",
-    "@material/mwc-drawer": "^0.17.2",
-    "@material/mwc-icon": "^0.17.2",
-    "@material/mwc-icon-button": "^0.17.2",
-    "@material/mwc-list": "^0.17.2",
-    "@material/mwc-top-app-bar-fixed": "^0.17.2",
-    "@material/theme": "^7.0.0",
-    "@material/typography": "^7.0.0",
-    "lit-html": "^1.2.1"
+    "@auth0/auth0-spa-js": "latest",
+    "@material/layout-grid": "latest",
+    "@material/mwc-button": "latest",
+    "@material/mwc-dialog": "latest",
+    "@material/mwc-drawer": "latest",
+    "@material/mwc-icon": "latest",
+    "@material/mwc-icon-button": "latest",
+    "@material/mwc-list": "latest",
+    "@material/mwc-textfield": "latest",
+    "@material/mwc-top-app-bar-fixed": "latest",
+    "@material/theme": "latest",
+    "@material/typography": "latest",
+    "lit-html": "latest"
   }
 }

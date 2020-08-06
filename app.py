@@ -32,7 +32,7 @@ routes = [
     Route('/options', endpoint=options, name="options"),
 
     Route('/subjects', endpoint=subjects, name="subjects"),
-    Route('/subjects/{id:int}', endpoint=SubjectREST, name="subject"),
+    Route('/subject/{id:int}', endpoint=SubjectREST, name="subject"),
 
     Mount('/dist', StaticFiles(directory="/home/noah/cog/dist"), name="dist")
     ]

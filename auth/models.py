@@ -14,4 +14,5 @@ class TokenUser(BaseUser):
     
     @property
     def identity(self) -> str:
-        return self.payload.get('uid')
+        sub = self.payload.get('sub').split('|')
+        return sub[1]

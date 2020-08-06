@@ -10,7 +10,7 @@ from starlette.authentication import requires
 
 @requires('authenticated')
 async def subjects(request: Request):
-    results = await Subject.all()
+    results = await Subject.filter(research_id = request.user.identity)
     data = []
     for result in results:
         data.append({
@@ -18,7 +18,6 @@ async def subjects(request: Request):
             'research_id': result.research_id,
             'name': result.name
         })
-    print(data)
     return JSONResponse(data)
 
 class SubjectREST(HTTPEndpoint):
@@ -30,9 +29,10 @@ class SubjectREST(HTTPEndpoint):
     
     @requires('authenticated')
     async def post(self, request: Request):
-        data = json.loads(request.body)
-        subject = await Subject(**data).save()
-        return JSONResponse(json.dumps(subject))
+        data = await request.json()
+        subject = Subject(research_id=request.user.identity, identifier=data['identifier'])
+        await subject.save()
+        return JSONResponse({'id': subject.id, 'research_id': subject.research_id, 'name': subject.name})
 
     @requires('authenticated')
     async def put(self, request: Request):
