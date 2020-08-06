@@ -2,7 +2,9 @@ from settings import templates
 from starlette.responses import JSONResponse, RedirectResponse
 from auth.utils import authenticated 
 
-@authenticated
+from starlette.authentication import requires
+
+@requires('authenticated')
 async def private(request):
     #
     # get the user and do something with it

@@ -1,7 +1,6 @@
 import httpx
 
 from functools import wraps
-from urllib.request import urlopen
 
 from starlette.responses import JSONResponse
 from settings import AUTH_ISSUER, AUTH_AUDIENCE, AUTH_ALGORITHMS

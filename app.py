@@ -7,12 +7,13 @@ from starlette.staticfiles import StaticFiles
 from starlette.routing import Route, Mount
 
 from starlette.middleware import Middleware
+from starlette.middleware.authentication import AuthenticationMiddleware
 from starlette.middleware.cors import CORSMiddleware
 
 #from tortoise.contrib.starlette import register_tortoise
 from tortoise import Tortoise
 
-from auth.utils import AuthError, handle_auth_error
+from auth.backends import Auth0Backend, auth_error_handler
 
 from auth.views import options
 from subject.views import SubjectREST, subjects
@@ -37,12 +38,9 @@ routes = [
     ]
 
 middleware = [
-    Middleware(CORSMiddleware, allow_origins=['*'], allow_headers=['*'], expose_headers=['Content-Type', 'Authorization'])
+    Middleware(CORSMiddleware, allow_origins=['*'], allow_headers=['*'], expose_headers=['Content-Type', 'Authorization']),
+    Middleware(AuthenticationMiddleware, backend=Auth0Backend(), on_error=auth_error_handler)
     ]
-
-exception_handlers = {
-    AuthError: handle_auth_error
-    }
 
 async def init_orm() -> None:  # pylint: disable=W0612
     await Tortoise.init(db_url="sqlite://:memory:", modules={"models": ["subject.models"]})
@@ -52,9 +50,9 @@ async def close_orm() -> None:  # pylint: disable=W0612
     await Tortoise.close_connections()
 
 if DEBUG:
-    app = Starlette(routes=routes, middleware=middleware, exception_handlers=exception_handlers, on_startup=[init_orm, bootstrap], on_shutdown=[close_orm], debug=True)
+    app = Starlette(routes=routes, middleware=middleware, on_startup=[init_orm, bootstrap], on_shutdown=[close_orm], debug=True)
 else:
-    app = Starlette(routes=routes, middleware=middleware, exception_handlers=exceptions_handlers)
+    app = Starlette(routes=routes, middleware=middleware)
     register_db()
 
 if __name__ == "__main__":
