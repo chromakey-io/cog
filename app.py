@@ -33,7 +33,7 @@ routes = [
     Route('/subjects', endpoint=subjects, name="subjects"),
     Route('/subject/{id:int}', endpoint=SubjectREST, name="subject"),
 
-    Mount('/dist', StaticFiles(directory="/home/noah/cog/dist"), name="dist")
+    Mount('/dist', StaticFiles(directory="./dist"), name="dist")
     ]
 
 middleware = [
