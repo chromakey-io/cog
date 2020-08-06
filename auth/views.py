@@ -1,8 +1,9 @@
 from starlette.responses import JSONResponse
+from starlette.requests import Request
 
 from settings import AUTH_ISSUER, AUTH_AUDIENCE, AUTH_CLIENT_ID
 
-def options(request):
+def options(request: Request):
     json = {'domain': AUTH_ISSUER,
             'audience': AUTH_AUDIENCE,
             'client_id': AUTH_CLIENT_ID,
