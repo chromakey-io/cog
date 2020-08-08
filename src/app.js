@@ -78,9 +78,8 @@ export class SubjectDialog extends LitElement {
         this._token = token;
     }
 
-    attributeChangedCallback(name, oldval, newval) {
-        console.log('attribute change: ', name, newval, oldval);
-        super.attributeChangedCallback(name, oldval, newval);
+    get input() {
+        return this.shadowRoot.getElementById('name')
     }
 
     render() {
@@ -90,17 +89,14 @@ export class SubjectDialog extends LitElement {
         return html`
             <mwc-dialog id="id-dialog" heading="Identity" open>
                 <p>Enter a subject's name or identty:</p>
-                <mwc-textfield outlined label="Identity" icon="face" maxLength=255 id="identity"></mwc-textfield>
+                <mwc-textfield outlined label="Identity" icon="face" maxLength=255 id="name"></mwc-textfield>
                 <mwc-button id="submit-id" @click=${this.handler} slot="primaryAction">Confirm</mwc-button>
                 <mwc-button id="cancel-id" @click=${this.destroy} slot="secondaryAction" dialogAction="close">Cancel</mwc-button>
             </mwc-dialog>`;
     }
 
-    async handler() {
-        const dialog = this.shadowRoot.children[0];
-        const textfield = dialog.children[1];
-
-        this.identity = textfield.value;
+    async handler() {        
+        this.identity = this.input.value;
 
         const data = JSON.stringify({'identity': this.identity});
 
