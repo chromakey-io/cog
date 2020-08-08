@@ -43,6 +43,7 @@
     "@material/mwc-top-app-bar-fixed": "latest",
     "@material/theme": "latest",
     "@material/typography": "latest",
+    "lit-element": "latest",
     "lit-html": "latest"
   }
 }

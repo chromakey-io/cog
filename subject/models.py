@@ -5,11 +5,11 @@ class Subject(models.Model):
  
     research_id = fields.CharField(max_length=255)
 
-    identifier = fields.CharField(max_length=255)
+    identity = fields.CharField(max_length=255)
     
     @property
     def name(self):
-        return f"{self.identifier}"
+        return f"{self.identity}"
 
     def __str__(self) -> str:
         return f"Subject {self.id}: {self.name}"

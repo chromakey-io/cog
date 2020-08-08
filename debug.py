@@ -6,15 +6,15 @@ async def bootstrap():
 
     sub = Subject()
     sub.research_id = RESEARCH_ID
-    sub.identifier = "Fred Flintstone"
+    sub.identity = "Fred Flintstone"
     await sub.save()
 
     sub = Subject()
     sub.research_id = RESEARCH_ID
-    sub.identifier = "Barney Rubble"
+    sub.identity = "Barney Rubble"
     await sub.save()
 
     sub = Subject()
     sub.research_id = RESEARCH_ID
-    sub.identifier = "Betty Boop"
+    sub.identity = "Betty Boop"
     await sub.save()

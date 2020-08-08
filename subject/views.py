@@ -30,7 +30,7 @@ class SubjectREST(HTTPEndpoint):
     @requires('authenticated')
     async def post(self, request: Request):
         data = await request.json()
-        subject = Subject(research_id=request.user.identity, identifier=data['identifier'])
+        subject = Subject(research_id=request.user.identity, identity=data['identity'])
         await subject.save()
         return JSONResponse({'id': subject.id, 'research_id': subject.research_id, 'name': subject.name})
 

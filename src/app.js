@@ -1,9 +1,9 @@
-import {html, render} from 'lit-html';
+import {LitElement, html, css} from 'lit-element';
 
 import createAuth0Client from '@auth0/auth0-spa-js';
 
-import '@material/mwc-dialog';
 import '@material/mwc-drawer';
+import '@material/mwc-dialog';
 
 import '@material/mwc-top-app-bar-fixed';
 import '@material/mwc-icon-button';
@@ -16,168 +16,226 @@ import '@material/mwc-list/mwc-list-item.js';
 
 import '@material/mwc-icon';
 
-let auth0 = null;
-let token = null;
-let options = null;
+export class SubjectList extends LitElement {
+    static get properties() {
+        return {
+            subjects: {type: Array},
+        }
+    };
 
-/*
-* Starts the authentication flow
-*/
+    constructor(token) {
+        super();
+        this._token = token;
+        this.subjects = [];
 
-const login = async () => {
-    try {
-        /* TODO: redirect_uri -- dynamic */
-        await auth0.loginWithRedirect(options);
-    } catch (err) {
-        console.log("Log in failed", err);
+        /* create an event to fire off the async handler */
+        const load = new Event('load-complete');
+        this.addEventListener('load-complete', this.handler);
+        this.dispatchEvent(load);
+    };
+
+    render() {
+        return html`
+        <mwc-list id="subject-list" wrapfocus="" innerrole="navigation" innerarialabel="Subject List" itemroles="link" roottabbable="">
+            ${this.subjects.map((subject) => 
+                html`<mwc-list-item class="subject" twoline="" graphic="icon" data-href="/subject/${subject.id}" role="link" tabindex="0" aria-disable="false">
+                        <span>${subject.name}</span>
+                        <span slot="secondary">${subject.id}</span>
+                        <mwc-icon slot="graphic">face</mwc-icon>
+                    </mwc-list-item>`
+            )}
+        </mwc-list>`;
     }
-};
 
-const logout = () => {
-    try {
-        console.log("Logging out");
-        auth0.logout({
-            returnTo: window.location.origin
+    async handler(event) {
+
+        const response = await fetch('/subjects', {
+            method: 'GET',
+            headers: {
+                Authorization: 'Bearer: ' + this._token
+            },
         });
-    } catch (err) {
-        console.log("Log out failed", err);
+
+        if (response.status == 200){
+            this.subjects = await response.json();
+        } else {
+            console.log(response);
+        }
     }
 };
 
-async function configureAuth0(){
-    const response = await fetch("/options");
-    options = await response.json();
+window.customElements.define('subject-list', SubjectList);
 
-    const authClient = await createAuth0Client({
-        domain: options.domain,
-        client_id: options.client_id,
-        scope: "openid profile email",
-        audience: options.audience
-    });
+export class SubjectDialog extends LitElement {
+    static get properties() {
+        return {
+            identity: {type: String}
+        }
+    };
 
-    return authClient;
+    constructor (token) {
+        super();
+        this._token = token;
+    }
+
+    attributeChangedCallback(name, oldval, newval) {
+        console.log('attribute change: ', name, newval, oldval);
+        super.attributeChangedCallback(name, oldval, newval);
+    }
+
+    render() {
+        const drawer = document.getElementsByTagName('mwc-drawer')[0];
+        drawer.open = false;
+
+        return html`
+            <mwc-dialog id="id-dialog" heading="Identity" open>
+                <p>Enter a subject's name or identty:</p>
+                <mwc-textfield outlined label="Identity" icon="face" maxLength=255 id="identity"></mwc-textfield>
+                <mwc-button id="submit-id" @click=${this.handler} slot="primaryAction">Confirm</mwc-button>
+                <mwc-button id="cancel-id" @click=${this.destroy} slot="secondaryAction" dialogAction="close">Cancel</mwc-button>
+            </mwc-dialog>`;
+    }
+
+    async handler() {
+        const dialog = this.shadowRoot.children[0];
+        const textfield = dialog.children[1];
+
+        this.identity = textfield.value;
+
+        const data = JSON.stringify({'identity': this.identity});
+
+        const response = await fetch('/subject/0', {
+                method: 'POST',
+                headers: {
+                    Authorization: 'Bearer: ' + this._token
+                },
+                body: data
+        });
+
+        if (response.status == 200) {
+            const data = await response.json();
+            console.log(data);
+        } else {
+            console.log(response);
+        }
+        await this.destroy();
+    }
+
+    async destroy() {
+        const subjects = new SubjectList(this._token);
+        const content = document.getElementById('content');
+        content.innerHTML = '';
+        content.appendChild(subjects);
+    }
 };
 
-async function renderSubjects(subjects){
-    const content = document.getElementById('content');
-    
-    let list = (subjects) => html`
-            <mwc-list id="subject-list" wrapfocus="" innerrole="navigation" innerarialabel="Patient List" itemroles="link" roottabbable="">
-                ${subjects.map((subject) => 
-                    html`<mwc-list-item class="subject" twoline="" graphic="icon" data-href="/patient/1" role="link" tabindex="0" aria-disable="false">
-                            <span>${subject.name}</span>
-                            <span slot="secondary">${subject.id}</span>
-                            <mwc-icon slot="graphic">face</mwc-icon>
-                        </mwc-list-item>`
-                )}
-            </mwc-list>`;
+window.customElements.define('subject-dialog', SubjectDialog);
 
-    render(list(subjects), content);
+class Authorize {
+    constructor() {
+        this._scope = "openid profile email"
+        this.token = "";
+    }
+
+    async init () {
+        this.options = await this._options();
+        this.client = await this._config();
+
+        /*
+        *   after the first redirect we'll have two @params code and state
+        *   check Auth0Client to determine if the login process has started
+        */
+        const query = window.location.search;
+        const shouldParseResult = query.includes("code=") && query.includes("state=");
+        this.authenticated = await this.client.isAuthenticated();
+
+        if (this.authenticated) {
+            this.token = await this.client.getTokenSilently(this.options);
+        }
+
+        /*
+        * start the login process
+        */
+        if(!shouldParseResult && !this.authenticated){
+            try {
+                await this.client.loginWithRedirect(this.options);
+            } catch (err) {
+                console.log("Log in failed", err);
+            }
+        }
+
+        /* 
+        * complete the login process
+        */        
+        if (shouldParseResult && !this.authenticated) {
+            console.log("> Parsing redirect");
+            try {
+                await this.client.handleRedirectCallback();
+            } catch (err) {
+                console.log("Error parsing redirect:", err);
+            }
+            this.token = await this.client.getTokenSilently(this.optons);
+        }      
+    }
+
+    async logout(event) {
+        console.log(this);
+        console.log(event);
+
+        try {
+            console.log("Logging out");
+            this.client.logout({
+                returnTo: window.location.origin
+            });
+        } catch (err) {
+            console.log("Log out failed", err);
+        }
+    }
+
+    async _options() {
+        const response = await fetch("/options");
+        const options = await response.json();
+        console.log(options);
+        return options
+    }
+
+    async _config() {
+        const authClient = await createAuth0Client({
+            domain: this.options.domain,
+            client_id: this.options.client_id,
+            scope: this._scope,
+            audience: this.options.audience
+        });
+        console.log("Configured Auth Client");
+        return authClient
+    };
+
 }
 
-async function subjectHandler(){
-    const response = await fetch('http://localhost:8000/subjects', {
-        method: 'GET',
-        headers: {
-            Authorization: 'Bearer: ' + token
-        },
+async function load(e) {
+    const auth = new Authorize();
+    await auth.init();
+
+    const content = document.querySelector('#content');
+    const list = new SubjectList(auth.token);
+    content.appendChild(list);
+
+    const button = document.querySelector('#btn-logout');
+    button.addEventListener('click', async (e) => {
+        auth.logout(e);
     });
-    if (response.status == 200){
-        const subjects = await response.json();
-        console.log(subjects);
-        await renderSubjects(subjects);
-    } else {
-        console.log(response);
-    }
-};
-async function subjectDialogHandler(){
-    const dialog = document.querySelector('#identifier-dialog');
-    const textfield = document.querySelector('#identifier');
 
-    const data = JSON.stringify({'identifier': textfield.value});
-
-    const response = await fetch('/subject/0', {
-            method: 'POST',
-            headers: {
-                Authorization: 'Bearer: ' + token
-            },
-            body: data
-    });
-    if (response.status == 200) {
-        const data = await response.json();
-        console.log(data);
-        await subjectHandler();
-    } else {
-        console.log(response);
-    }
-};
-
-async function renderSubjectDialog(){
     const drawer = document.getElementsByTagName('mwc-drawer')[0];
-    drawer.open = false;
-
-    const content = document.getElementById('content');
-
-    const form = () => html`
-        <mwc-dialog id="identifier-dialog" heading="Identifier" open>
-            <p>Enter a subject's name or identifier:</p>
-            <mwc-textfield outlined label="Identifier" icon="face" maxLength=255 id="identifier"></mwc-textfield>
-            <mwc-button id="submit-identifier" slot="primaryAction">Confirm</mwc-button>
-            <mwc-button slot="secondaryAction" dialogAction="close">Cancel</mwc-button>
-        </mwc-dialog>`;
-
-    render(form(), content);
-
-    const submit = document.querySelector('#submit-identifier');
-    submit.addEventListener('click', subjectDialogHandler);
-};
-
-const load = async () => {
-    auth0 = await configureAuth0();
-    const isAuthenticated = await auth0.isAuthenticated();
+    const container = drawer.parentNode;
+    container.addEventListener('MDCTopAppBar:nav', () => {
+        drawer.open = !drawer.open;
+    });
     
-    if(isAuthenticated) {
-        // set the global token
-        token = await auth0.getTokenSilently();
-        await subjectHandler();
-    }
-    /* 
-    * after the first redirect we'll have two @params code and state
-    */
-
-    const query = window.location.search;
-    const shouldParseResult = query.includes("code=") && query.includes("state=");
-
-    /* 
-    * complete the login process IF these @params exist
-    */
-
-    if(!shouldParseResult && !isAuthenticated)
-        await login();
-
-    if (shouldParseResult && !isAuthenticated) {
-      console.log("> Parsing redirect");
-      try {
-        const result = await auth0.handleRedirectCallback();
-        // set the global token
-        token = await auth0.getTokenSilently();
-        await subjectHandler();
-      } catch (err) {
-        console.log("Error parsing redirect:", err);
-      }
-    }
-};
+    const addSubject = document.querySelector('#add-subject');
+    addSubject.addEventListener('click', async (e) => {
+        const dialog = new SubjectDialog(auth.token);
+        content.appendChild(dialog);
+    });
+}
 
 window.addEventListener('load', load);
-
-const button = document.querySelector('#btn-logout');
-button.addEventListener('click', logout);
-
-const drawer = document.getElementsByTagName('mwc-drawer')[0];
-const container = drawer.parentNode;
-container.addEventListener('MDCTopAppBar:nav', () => {
-    drawer.open = !drawer.open;
-});
-
-const addSubject = document.querySelector('#add-subject');
-addSubject.addEventListener('click', renderSubjectDialog);

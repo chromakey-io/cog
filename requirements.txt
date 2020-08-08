@@ -7,4 +7,5 @@ python-jose
 pydantic
 aiosqlite
 asyncpg
+jinja2
 tortoise-orm[accel]
