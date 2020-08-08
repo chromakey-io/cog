@@ -39,6 +39,7 @@
     "@material/mwc-icon": "latest",
     "@material/mwc-icon-button": "latest",
     "@material/mwc-list": "latest",
+    "@material/mwc-snackbar": "^0.18.0",
     "@material/mwc-textfield": "latest",
     "@material/mwc-top-app-bar-fixed": "latest",
     "@material/theme": "latest",

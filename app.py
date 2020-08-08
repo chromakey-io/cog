@@ -31,7 +31,9 @@ routes = [
     Route('/options', endpoint=options, name="options"),
 
     Route('/subjects', endpoint=subjects, name="subjects"),
-    Route('/subject/{id:int}', endpoint=SubjectREST, name="subject"),
+    
+    Route('/subject', endpoint=SubjectREST, methods=["POST"], name="add-subject"),
+    Route('/subject/{id:int}', endpoint=SubjectREST, methods=["GET", "PUT", "DELETE"], name="subject"),
 
     Mount('/dist', StaticFiles(directory="./dist"), name="dist")
     ]

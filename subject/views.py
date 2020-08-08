@@ -16,7 +16,7 @@ async def subjects(request: Request):
         data.append({
             'id':result.id,
             'research_id': result.research_id,
-            'name': result.name
+            'identity': result.identity
         })
     return JSONResponse(data)
 
@@ -32,7 +32,7 @@ class SubjectREST(HTTPEndpoint):
         data = await request.json()
         subject = Subject(research_id=request.user.identity, identity=data['identity'])
         await subject.save()
-        return JSONResponse({'id': subject.id, 'research_id': subject.research_id, 'name': subject.name})
+        return JSONResponse({'id': subject.id, 'research_id': subject.research_id, 'identity': subject.identity})
 
     @requires('authenticated')
     async def put(self, request: Request):

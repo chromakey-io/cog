@@ -15,6 +15,7 @@ import '@material/mwc-list/mwc-list.js';
 import '@material/mwc-list/mwc-list-item.js';
 
 import '@material/mwc-icon';
+import '@material/mwc-snackbar';
 
 export class SubjectList extends LitElement {
     static get properties() {
@@ -23,15 +24,13 @@ export class SubjectList extends LitElement {
         }
     };
 
-    constructor(token) {
+    constructor(options) {
         super();
-        this._token = token;
+        this._token = options.token;
         this.subjects = [];
 
-        /* create an event to fire off the async handler */
-        const load = new Event('load-complete');
-        this.addEventListener('load-complete', this.handler);
-        this.dispatchEvent(load);
+        // dispatch async handler
+        this.handler();
     };
 
     render() {
@@ -39,7 +38,7 @@ export class SubjectList extends LitElement {
         <mwc-list id="subject-list" wrapfocus="" innerrole="navigation" innerarialabel="Subject List" itemroles="link" roottabbable="">
             ${this.subjects.map((subject) => 
                 html`<mwc-list-item class="subject" twoline="" graphic="icon" data-href="/subject/${subject.id}" role="link" tabindex="0" aria-disable="false">
-                        <span>${subject.name}</span>
+                        <span>${subject.identity}</span>
                         <span slot="secondary">${subject.id}</span>
                         <mwc-icon slot="graphic">face</mwc-icon>
                     </mwc-list-item>`
@@ -59,12 +58,86 @@ export class SubjectList extends LitElement {
         if (response.status == 200){
             this.subjects = await response.json();
         } else {
-            console.log(response);
+            const error = new ErrorMessage({'message':"Error Loading Subjects"});
+            document.getElementById('content').appendChild(error);
         }
     }
 };
 
 window.customElements.define('subject-list', SubjectList);
+
+export class ErrorMessage extends LitElement {
+    static get properties() {
+        return {
+            message: {type: String}
+        }
+    }
+    
+    constructor(options = {'retry':false, 'message': 'Error. Uh Oh :('}) {
+        super();
+
+        this.retry = options.retry;
+        this.message = options.message;
+    }
+    
+    render() {
+        return html`<mwc-snackbar open timeoutMs="-1" id="error-message" labelText="${this.message}">
+                        ${this.renderRetry}
+                        <mwc-icon-button icon="close" @click=${this.remove} slot="dismiss"></mwc-icon-button>
+                    </mwc-snackbar>`;
+    }
+
+    get renderRetry() {
+        if (this.retry)
+            return html`<mwc-button @click="${this.retry()} id="error-retry" slot="action">RETRY</mwc-button>`;
+        else
+            return html``;
+    }
+};
+
+window.customElements.define('error-message', ErrorMessage);
+
+export class SubjectDetail extends LitElement {
+    static get properties() {
+        return {
+            research_id: {type: String},
+            id: {type: String},
+            identity: {type: String},
+        }
+    }
+
+    constructor(options) {
+        super();
+        this._token = options.token;
+        this.id = options.id;
+
+        this.handler();
+    }
+
+    render() {
+        return html`<div></div>`
+    }
+
+    async handler() {
+        const response = await fetch('/subject/${id}', {
+                method: 'GET',
+                headers: {
+                    Authorization: 'Bearer: ' + this._token
+                }
+        });
+
+        if (response.status == 200) {
+            const subject = await response.json();
+            this.id = subject.id;
+            this.identity = subject.identity;
+            this.research_id = subject.research_id;
+        } else {
+            const error = new ErrorMessage({'message':"Error Loading Subject"});
+            document.getElementById('content').appendChild(error);        }
+    }
+};
+
+window.customElements.define('subject-detail', SubjectDetail);
 
 export class SubjectDialog extends LitElement {
     static get properties() {
@@ -73,9 +146,10 @@ export class SubjectDialog extends LitElement {
         }
     };
 
-    constructor (token) {
+    constructor (options) {
         super();
-        this._token = token;
+        this._token = options.token;
+        this.subjects_list = options.subjects_list;
     }
 
     get input() {
@@ -100,7 +174,7 @@ export class SubjectDialog extends LitElement {
 
         const data = JSON.stringify({'identity': this.identity});
 
-        const response = await fetch('/subject/0', {
+        const response = await fetch('/subject', {
                 method: 'POST',
                 headers: {
                     Authorization: 'Bearer: ' + this._token
@@ -110,18 +184,16 @@ export class SubjectDialog extends LitElement {
 
         if (response.status == 200) {
             const data = await response.json();
-            console.log(data);
         } else {
-            console.log(response);
+            const error = new ErrorMessage({'message':"Error Saving Subject"});
+            document.getElementById('content').appendChild(error);
         }
         await this.destroy();
     }
 
     async destroy() {
-        const subjects = new SubjectList(this._token);
-        const content = document.getElementById('content');
-        content.innerHTML = '';
-        content.appendChild(subjects);
+        this.subjects_list.handler();
+        this.remove();
     }
 };
 
@@ -156,7 +228,8 @@ class Authorize {
             try {
                 await this.client.loginWithRedirect(this.options);
             } catch (err) {
-                console.log("Log in failed", err);
+                const error = new ErrorMessage({'message':"Log in Failed! Uh OHhhh."});
+                document.getElementById('content').appendChild(error);
             }
         }
 
@@ -168,7 +241,8 @@ class Authorize {
             try {
                 await this.client.handleRedirectCallback();
             } catch (err) {
-                console.log("Error parsing redirect:", err);
+                const error = new ErrorMessage({'message':"Error parsing redirect."});
+                document.getElementById('content').appendChild(error);
             }
             this.token = await this.client.getTokenSilently(this.optons);
         }      
@@ -184,7 +258,8 @@ class Authorize {
                 returnTo: window.location.origin
             });
         } catch (err) {
-            console.log("Log out failed", err);
+            const error = new ErrorMessage({'message':"Log out Failed! Uh OHhhh."});
+            document.getElementById('content').appendChild(error);
         }
     }
 
@@ -209,11 +284,12 @@ class Authorize {
 }
 
 async function load(e) {
+    const content = document.querySelector('#content');
+
     const auth = new Authorize();
     await auth.init();
 
-    const content = document.querySelector('#content');
-    const list = new SubjectList(auth.token);
+    let list = new SubjectList({'token': auth.token});
     content.appendChild(list);
 
     const button = document.querySelector('#btn-logout');
@@ -229,9 +305,11 @@ async function load(e) {
     
     const addSubject = document.querySelector('#add-subject');
     addSubject.addEventListener('click', async (e) => {
-        const dialog = new SubjectDialog(auth.token);
+        const dialog = new SubjectDialog({'token':auth.token, 'subjects_list': list});
         content.appendChild(dialog);
     });
+    const error = new ErrorMessage({'message':"LOADING COMPLETE"});
+    document.getElementById('content').appendChild(error);
 }
 
 window.addEventListener('load', load);
