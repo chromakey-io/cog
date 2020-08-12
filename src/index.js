@@ -26,6 +26,12 @@ import 'carbon-web-components/es/components/data-table/table-header-cell.js';
 import 'carbon-web-components/es/components/data-table/table-row.js';
 import 'carbon-web-components/es/components/data-table/table-cell.js';
 
+//import './layout-grid/mwc-layout-grid.js';
+
+import CarbonStyles from './carbon.scss';
+import MaterialStyles from './theme.scss';
+import Typography from './typography.scss';
+
 export class SubjectDetail extends LitElement {
 
     static get properties() {
@@ -87,7 +93,6 @@ export class SubjectDetail extends LitElement {
             </mwc-layout-grid-cell>
             <mwc-layout-grid-cell span="2"></mwc-layout-grid-cell>
         </mwc-layout-grid>`;
-
     }
 
     async handler() {

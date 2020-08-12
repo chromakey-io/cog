@@ -5,10 +5,12 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
   mode: 'development',
-  entry:[
-    './src/app.js',
-    './src/app.scss' 
-  ],
+  entry:{
+    app: './src/index.js',
+    theme: './src/theme.scss',
+    carbon: './src/carbon.scss',
+    typography: './src/typography.scss'
+  },
   devtool: 'inline-source-map',
   devServer: {
     contentBase: './dist',
@@ -17,10 +19,10 @@ module.exports = {
     new CleanWebpackPlugin(),
   ],
   output: {
-    filename: 'bundle.js',
+    filename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
   },
-    module: {
+  module: {
       rules: [
         {
           test: /\.scss$/,
@@ -28,7 +30,7 @@ module.exports = {
           {
             loader: 'file-loader',
             options: {
-              name: 'bundle.css',
+              name: '[name].css',
             },
           },
           { loader: 'extract-loader' },
