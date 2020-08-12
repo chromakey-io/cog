@@ -32,6 +32,7 @@
   },
   "dependencies": {
     "@auth0/auth0-spa-js": "latest",
+    "@carbon/themes": "^10.16.0",
     "@material/layout-grid": "latest",
     "@material/mwc-button": "latest",
     "@material/mwc-dialog": "latest",
@@ -39,11 +40,13 @@
     "@material/mwc-icon": "latest",
     "@material/mwc-icon-button": "latest",
     "@material/mwc-list": "latest",
-    "@material/mwc-snackbar": "^0.18.0",
+    "@material/mwc-snackbar": "latest",
     "@material/mwc-textfield": "latest",
     "@material/mwc-top-app-bar-fixed": "latest",
     "@material/theme": "latest",
     "@material/typography": "latest",
+    "carbon-components": "latest",
+    "carbon-web-components": "latest",
     "lit-element": "latest",
     "lit-html": "latest"
   }

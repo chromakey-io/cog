@@ -16,6 +16,101 @@ import '@material/mwc-list/mwc-list-item.js';
 
 import '@material/mwc-icon';
 import '@material/mwc-snackbar';
+import './layout-grid/mwc-layout-grid.js';
+
+import 'carbon-web-components/es/components/data-table/table.js';
+import 'carbon-web-components/es/components/data-table/table-body.js';
+import 'carbon-web-components/es/components/data-table/table-head.js';
+import 'carbon-web-components/es/components/data-table/table-header-row.js';
+import 'carbon-web-components/es/components/data-table/table-header-cell.js';
+import 'carbon-web-components/es/components/data-table/table-row.js';
+import 'carbon-web-components/es/components/data-table/table-cell.js';
+
+export class SubjectDetail extends LitElement {
+
+    static get properties() {
+        return {
+            research_id: {type: String},
+            id: {type: String},
+            identity: {type: String},
+            age: {type: Number}
+        }
+    }
+
+    constructor(options) {
+        super();
+        this._token = options.token;
+        this.id = options.id;
+
+        this.handler();
+    }
+
+    render() {
+        return html`
+        <mwc-layout-grid>
+            <mwc-layout-grid-cell span="2"></mwc-layout-grid-cell>
+            <mwc-layout-grid-cell span="8">
+                <span>Identity: ${this.identity}</span>
+                <span>Age: ${this.age}</span>
+            </mwc-layout-grid-cell>
+            <mwc-layout-grid-cell span="2"></mwc-layout-grid-cell>
+            <mwc-layout-grid-cell span="2"></mwc-layout-grid-cell>
+            <mwc-layout-grid-cell span="8">
+                <bx-data-table color-scheme="zebra">
+                    <bx-table>
+                        <bx-table-head>
+                            <bx-table-header-row>
+                                <bx-table-header-cell>Foo</bx-table-header-cell>
+                                <bx-table-header-cell>Bar</bx-table-header-cell>
+                                <bx-table-header-cell>Baz</bx-table-header-cell>
+                            </bx-table-header-row>
+                        </bx-table-head>
+                        <bx-table-body>
+                            <bx-table-row>
+                                <bx-table-cell>Foo1</bx-table-cell>
+                                <bx-table-cell>Bar1</bx-table-cell>
+                                <bx-table-cell>Baz1</bx-table-cell>
+                            </bx-table-row>
+                            <bx-table-row>
+                                <bx-table-cell>Foo2</bx-table-cell>
+                                <bx-table-cell>Bar2</bx-table-cell>
+                                <bx-table-cell>Baz2</bx-table-cell>
+                            </bx-table-row>
+                            <bx-table-row>
+                                <bx-table-cell>Foo3</bx-table-cell>
+                                <bx-table-cell>Bar3</bx-table-cell>
+                                <bx-table-cell>Baz3</bx-table-cell>
+                            </bx-table-row>
+                        </bx-table-body>
+                    </bx-table>
+                </bx-data-table>
+            </mwc-layout-grid-cell>
+            <mwc-layout-grid-cell span="2"></mwc-layout-grid-cell>
+        </mwc-layout-grid>`;
+
+    }
+
+    async handler() {
+        const response = await fetch(`/subject/${this.id}`, {
+                method: 'GET',
+                headers: {
+                    Authorization: 'Bearer: ' + this._token
+                }
+        });
+
+        if (response.status == 200) {
+            const subject = await response.json();
+            this.id = subject.id;
+            this.identity = subject.identity;
+            this.age = subject.age;
+        } else {
+            const error = new ErrorMessage({'message':"Error Loading Subject"});
+            document.getElementById('content').appendChild(error);        
+        }
+    }
+};
+
+window.customElements.define('subject-detail', SubjectDetail);
 
 export class SubjectList extends LitElement {
     static get properties() {
@@ -37,7 +132,7 @@ export class SubjectList extends LitElement {
         return html`
         <mwc-list id="subject-list" wrapfocus="" innerrole="navigation" innerarialabel="Subject List" itemroles="link" roottabbable="">
             ${this.subjects.map((subject) => 
-                html`<mwc-list-item class="subject" twoline="" graphic="icon" data-href="/subject/${subject.id}" role="link" tabindex="0" aria-disable="false">
+                html`<mwc-list-item class="subject" twoline="" graphic="icon" @click="${this.detail}" subject="${subject.id}" data-href="/subject/${subject.id}" role="link" tabindex="0" aria-disable="false">
                         <span>${subject.identity}</span>
                         <span slot="secondary">${subject.id}</span>
                         <mwc-icon slot="graphic">face</mwc-icon>
@@ -45,9 +140,16 @@ export class SubjectList extends LitElement {
             )}
         </mwc-list>`;
     }
+      
+    async detail(event) {
+        const subject_id = event.target.getAttribute('subject');
+
+        const subject_detail = new SubjectDetail({'id': subject_id, 'token': this._token});
+        const content = document.getElementById('content');
+        content.replaceChildren(subject_detail);
+    }
 
     async handler(event) {
-
         const response = await fetch('/subjects', {
             method: 'GET',
             headers: {
@@ -97,54 +199,7 @@ export class ErrorMessage extends LitElement {
 
 window.customElements.define('error-message', ErrorMessage);
 
-export class SubjectDetail extends LitElement {
-    static get properties() {
-        return {
-            research_id: {type: String},
-            id: {type: String},
-            identity: {type: String},
-        }
-    }
-
-    constructor(options) {
-        super();
-        this._token = options.token;
-        this.id = options.id;
-
-        this.handler();
-    }
-
-    render() {
-        return html`<div></div>`
-    }
-
-    async handler() {
-        const response = await fetch('/subject/${id}', {
-                method: 'GET',
-                headers: {
-                    Authorization: 'Bearer: ' + this._token
-                }
-        });
-
-        if (response.status == 200) {
-            const subject = await response.json();
-            this.id = subject.id;
-            this.identity = subject.identity;
-            this.research_id = subject.research_id;
-        } else {
-            const error = new ErrorMessage({'message':"Error Loading Subject"});
-            document.getElementById('content').appendChild(error);        }
-    }
-};
-
-window.customElements.define('subject-detail', SubjectDetail);
-
 export class SubjectDialog extends LitElement {
-    static get properties() {
-        return {
-            identity: {type: String}
-        }
-    };
 
     constructor (options) {
         super();
@@ -152,8 +207,12 @@ export class SubjectDialog extends LitElement {
         this.subjects_list = options.subjects_list;
     }
 
-    get input() {
-        return this.shadowRoot.getElementById('name')
+    get identity() {
+        return this.shadowRoot.getElementById('identity').value
+    }
+
+    get birthdate() {
+        return this.shadowRoot.getElementById('birthdate').value
     }
 
     render() {
@@ -162,17 +221,23 @@ export class SubjectDialog extends LitElement {
 
         return html`
             <mwc-dialog id="id-dialog" heading="Identity" open>
-                <p>Enter a subject's name or identty:</p>
-                <mwc-textfield outlined label="Identity" icon="face" maxLength=255 id="name"></mwc-textfield>
+                <p>Create a new subject:</p>
+                <p>
+                <mwc-textfield outlined label="Identity" icon="face" maxLength="255" required="true" id="identity"></mwc-textfield>
+                </p>
+                <p>
+                    <mwc-textfield outlined label="Birthdate" helper="Birthdate" required="true" icon="today" type="date" id="birthdate"></mwc-textfield>
+                </p>
                 <mwc-button id="submit-id" @click=${this.handler} slot="primaryAction">Confirm</mwc-button>
                 <mwc-button id="cancel-id" @click=${this.destroy} slot="secondaryAction" dialogAction="close">Cancel</mwc-button>
             </mwc-dialog>`;
     }
 
-    async handler() {        
-        this.identity = this.input.value;
-
-        const data = JSON.stringify({'identity': this.identity});
+    async handler() {
+        const data = JSON.stringify({
+            'identity': this.identity,
+            'birthdate': this.birthdate
+        });
 
         const response = await fetch('/subject', {
                 method: 'POST',
@@ -237,7 +302,6 @@ class Authorize {
         * complete the login process
         */        
         if (shouldParseResult && !this.authenticated) {
-            console.log("> Parsing redirect");
             try {
                 await this.client.handleRedirectCallback();
             } catch (err) {
@@ -249,11 +313,7 @@ class Authorize {
     }
 
     async logout(event) {
-        console.log(this);
-        console.log(event);
-
         try {
-            console.log("Logging out");
             this.client.logout({
                 returnTo: window.location.origin
             });
@@ -266,7 +326,6 @@ class Authorize {
     async _options() {
         const response = await fetch("/options");
         const options = await response.json();
-        console.log(options);
         return options
     }
 
@@ -277,9 +336,12 @@ class Authorize {
             scope: this._scope,
             audience: this.options.audience
         });
-        console.log("Configured Auth Client");
         return authClient
     };
+
+    async user() {
+        return await this.client.getUser();
+    }
 
 }
 
@@ -288,6 +350,9 @@ async function load(e) {
 
     const auth = new Authorize();
     await auth.init();
+
+    const user = await auth.user();
+    document.getElementById('user-welcome').innerHTML = `${user.name}`;
 
     let list = new SubjectList({'token': auth.token});
     content.appendChild(list);
@@ -308,6 +373,7 @@ async function load(e) {
         const dialog = new SubjectDialog({'token':auth.token, 'subjects_list': list});
         content.appendChild(dialog);
     });
+
     const error = new ErrorMessage({'message':"LOADING COMPLETE"});
     document.getElementById('content').appendChild(error);
 }

@@ -3,10 +3,13 @@
   $secondary: #6d6d6d,
   $background: #E1E2E1,
 );
-@use "@material/layout-grid/mdc-layout-grid";
+
 @use "@material/typography/mdc-typography";
 
 @import "@material/theme/mdc-theme";
+
+@import '@carbon/themes/scss/themes';
+@include carbon--theme($carbon--theme--g90);
 
 body {
     margin: 0;
