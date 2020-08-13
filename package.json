@@ -49,6 +49,7 @@
     "carbon-components": "latest",
     "carbon-web-components": "latest",
     "lit-element": "latest",
-    "lit-html": "latest"
+    "lit-html": "latest",
+    "material-web-components-layout-grid": "^0.12.1"
   }
 }
