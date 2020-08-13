@@ -1,13 +1,8 @@
-import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
 import { terser } from 'rollup-plugin-terser';
 import postcss from 'rollup-plugin-postcss'
-
-//import babel from "rollup-plugin-babel";
-//import preset from "@babel/preset-env";
-//import style from 'rollup-plugin-lit-html-style';
- 
-//const esmodules = true;
+import litcss from 'rollup-plugin-lit-css';
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -31,9 +26,11 @@ const cssOptions = () => ({
 export default [
     {
         input: 'src/index.js',
+        preserveEntrySignatures: false,
         plugins: [
             resolve(),
             commonjs(),
+            litcss(),
             postcss(cssOptions()),
             production && terser()
         ],
@@ -43,6 +40,7 @@ export default [
             sourcemap: true
         }
     },
+
 /*
     {
         input: 'src/styles.js',

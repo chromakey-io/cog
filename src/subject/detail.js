@@ -1,18 +1,17 @@
-import {LitElement, html} from 'lit-element';
-
-import 'carbon-web-components/es/components/data-table/table.js';
-import 'carbon-web-components/es/components/data-table/table-body.js';
-import 'carbon-web-components/es/components/data-table/table-head.js';
-import 'carbon-web-components/es/components/data-table/table-header-row.js';
-import 'carbon-web-components/es/components/data-table/table-header-cell.js';
-import 'carbon-web-components/es/components/data-table/table-row.js';
-import 'carbon-web-components/es/components/data-table/table-cell.js';
-
-import {LayoutGrid} from '../layout-grid/mwc-layout-grid.js';
+import {LitElement, html, css} from 'lit-element';
+import {LayoutGrid, LayoutGridCell} from '../layout-grid/mwc-layout-grid.js';
 
 import {ErrorMessage} from '../utils.js';
 
+import {MDCDataTable} from '@material/data-table';
+
+import {default as TableStyles} from '@material/data-table/dist/mdc.data-table.css';
+
 export class SubjectDetail extends LitElement {
+
+    static get styles() {
+        return [TableStyles, css`.mdc-data-table__table{ width: 100% };`];
+    }
 
     static get properties() {
         return {
@@ -42,37 +41,53 @@ export class SubjectDetail extends LitElement {
             <mwc-layout-grid-cell span="2"></mwc-layout-grid-cell>
             <mwc-layout-grid-cell span="2"></mwc-layout-grid-cell>
             <mwc-layout-grid-cell span="8">
-                <bx-data-table color-scheme="zebra">
-                    <bx-table>
-                        <bx-table-head>
-                            <bx-table-header-row>
-                                <bx-table-header-cell>Foo</bx-table-header-cell>
-                                <bx-table-header-cell>Bar</bx-table-header-cell>
-                                <bx-table-header-cell>Baz</bx-table-header-cell>
-                            </bx-table-header-row>
-                        </bx-table-head>
-                        <bx-table-body>
-                            <bx-table-row>
-                                <bx-table-cell>Foo1</bx-table-cell>
-                                <bx-table-cell>Bar1</bx-table-cell>
-                                <bx-table-cell>Baz1</bx-table-cell>
-                            </bx-table-row>
-                            <bx-table-row>
-                                <bx-table-cell>Foo2</bx-table-cell>
-                                <bx-table-cell>Bar2</bx-table-cell>
-                                <bx-table-cell>Baz2</bx-table-cell>
-                            </bx-table-row>
-                            <bx-table-row>
-                                <bx-table-cell>Foo3</bx-table-cell>
-                                <bx-table-cell>Bar3</bx-table-cell>
-                                <bx-table-cell>Baz3</bx-table-cell>
-                            </bx-table-row>
-                        </bx-table-body>
-                    </bx-table>
-                </bx-data-table>
+                <div id="#trials" class="mdc-data-table">
+                    <div class="mdc-data-table__table-container">
+                    <table class="mdc-data-table__table" aria-label="Dessert calories">
+                        <thead>
+                        <tr class="mdc-data-table__header-row">
+                            <th class="mdc-data-table__header-cell" role="columnheader" scope="col">Dessert</th>
+                            <th class="mdc-data-table__header-cell mdc-data-table__header-cell--numeric" role="columnheader" scope="col">Carbs (g)</th>
+                            <th class="mdc-data-table__header-cell mdc-data-table__header-cell--numeric" role="columnheader" scope="col">Protein (g)</th>
+                            <th class="mdc-data-table__header-cell" role="columnheader" scope="col">Comments</th>
+                        </tr>
+                        </thead>
+                        <tbody class="mdc-data-table__content">
+                        <tr class="mdc-data-table__row">
+                            <th class="mdc-data-table__cell" scope="row">Frozen yogurt</th>
+                            <td class="mdc-data-table__cell mdc-data-table__cell--numeric">24</td>
+                            <td class="mdc-data-table__cell mdc-data-table__cell--numeric">4.0</td>
+                            <td class="mdc-data-table__cell">Super tasty</td>
+                        </tr>
+                        <tr class="mdc-data-table__row">
+                            <th class="mdc-data-table__cell" scope="row">Ice cream sandwich</th>
+                            <td class="mdc-data-table__cell mdc-data-table__cell--numeric">37</td>
+                            <td class="mdc-data-table__cell mdc-data-table__cell--numeric">4.33333333333</td>
+                            <td class="mdc-data-table__cell">I like ice cream more</td>
+                        </tr>
+                        <tr class="mdc-data-table__row">
+                            <th class="mdc-data-table__cell" scope="row">Eclair</th>
+                            <td class="mdc-data-table__cell mdc-data-table__cell--numeric">24</td>
+                            <td class="mdc-data-table__cell mdc-data-table__cell--numeric">6.0</td>
+                            <td class="mdc-data-table__cell">New filing flavor</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    </div>
+                </div>
             </mwc-layout-grid-cell>
             <mwc-layout-grid-cell span="2"></mwc-layout-grid-cell>
-        </mwc-layout-grid>`;
+        </mwc-layout-grid>
+        `;
+    }
+
+    firstUpdated() {
+        const trials = this.shadowRoot.getElementById('#trials');
+        const dataTable = new MDCDataTable(trials);
+    }
+
+    async _handleSearch(event) {
+        return
     }
 
     async handler() {

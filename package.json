@@ -21,14 +21,18 @@
     "@material/typography": "^8.0.0-canary.096a7a066.0",
     "@rollup/plugin-commonjs": "^14.0.0",
     "@rollup/plugin-node-resolve": "^8.4.0",
+    "node-sass": "^4.14.1",
     "rollup": "^2.23.1",
     "rollup-plugin-babel": "^4.4.0",
-    "rollup-plugin-lit-html-style": "^0.3.3",
+    "rollup-plugin-lit-css": "^2.0.4",
+    "rollup-plugin-postcss": "^3.1.5",
+    "rollup-plugin-postcss-lit": "^0.2.2",
     "rollup-plugin-terser": "^7.0.0"
   },
   "dependencies": {
     "@auth0/auth0-spa-js": "latest",
     "@carbon/themes": "latest",
+    "@material/data-table": "latest",
     "@material/layout-grid": "latest",
     "@material/mwc-button": "latest",
     "@material/mwc-dialog": "latest",
@@ -43,7 +47,6 @@
     "carbon-components": "latest",
     "carbon-web-components": "latest",
     "lit-element": "latest",
-    "lit-html": "latest",
-    "rollup-plugin-postcss": "^3.1.5"
+    "lit-html": "latest"
   }
 }
