@@ -1,4 +1,4 @@
-import{_ as t,q as e,p as a,o as i,f as r,B as o,i as n,h as d,a as c,d as s,b as l,c as p,e as m,g as h,j as u,L as g,R as _,k as b,l as f,m as y,n as x,r as v,s as w}from"./index.js";import{ErrorMessage as k}from"./utils-19658216.js";
+import{_ as t,q as e,p as a,o as i,f as r,B as o,i as n,h as d,a as c,d as s,b as l,c as p,e as m,g as h,j as u,L as g,R as _,k as b,l as f,m as y,n as x,r as v,s as w}from"./index.js";import{ErrorMessage as k}from"./utils-b3b31a24.js";
 /**
  * @license
  * Copyright 2016 Google Inc.
@@ -1189,4 +1189,4 @@ var Dt=["touchstart","pointerdown","mousedown","keydown"],Ht=["touchend","pointe
                         <mwc-icon slot="graphic">face</mwc-icon>
                     </mwc-list-item>`)}
         </mwc-list>`}async detail(t){const e=t.target.getAttribute("subject"),a=new le({id:e,token:this._token});document.getElementById("content").replaceChildren(a)}async handler(t){const e=await fetch("/subjects",{method:"GET",headers:{Authorization:"Bearer: "+this._token}});if(200==e.status)this.subjects=await e.json();else{const t=new k({message:"Error Loading Subjects"});document.getElementById("content").appendChild(t)}}}window.customElements.define("subject-list",pe);export{pe as SubjectList};
-//# sourceMappingURL=list-4dde18a4.js.map
+//# sourceMappingURL=list-abd4624b.js.map

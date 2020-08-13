@@ -10,11 +10,18 @@ import {TextField} from '@material/mwc-textfield/mwc-textfield';
 
 import {Snackbar} from '@material/mwc-snackbar';
 
-import CarbonStyles from './carbon.scss';
+import CognitiveIcon from '@carbon/icons/es/cognitive/32';
+import {getAttributes, toSVG} from '@carbon/icon-helpers';
+
 import MaterialStyles from './theme.scss';
 import Typography from './typography.scss';
 
 async function load(e) {
+    /* set nav icon to a brain */
+    const logo = document.getElementById('logo');
+    const logo_brain = toSVG({...CognitiveIcon, attrs: CognitiveIcon.attrs});
+    logo.appendChild(logo_brain);
+
     const {Authorize} = await import('./authorize.js');
 
     const content = document.querySelector('#content');

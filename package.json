@@ -31,6 +31,8 @@
   },
   "dependencies": {
     "@auth0/auth0-spa-js": "latest",
+    "@carbon/icon-helpers": "^10.9.0",
+    "@carbon/icons": "^10.15.0",
     "@carbon/themes": "latest",
     "@material/data-table": "latest",
     "@material/layout-grid": "latest",
