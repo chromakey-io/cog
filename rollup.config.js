@@ -38,11 +38,12 @@ export default [
             production && terser()
         ],
         output: {
-            file: 'dist/index.js',
+            dir: 'dist/',
             format: 'es',
             sourcemap: true
         }
-    },/*
+    },
+/*
     {
         input: 'src/styles.js',
         plugins: [
