@@ -26,7 +26,7 @@ const cssOptions = () => ({
 export default [
     {
         input: 'src/index.js',
-        preserveEntrySignatures: false,
+        preserveEntrySignatures:false,
         plugins: [
             resolve(),
             commonjs(),
@@ -37,7 +37,8 @@ export default [
         output: {
             dir: 'dist/',
             format: 'es',
-            sourcemap: true
+            sourcemap: true,
+            chunkFileNames: "[name].js"
         }
     },
 

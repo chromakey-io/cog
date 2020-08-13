@@ -15,6 +15,7 @@ import {getAttributes, toSVG} from '@carbon/icon-helpers';
 
 import MaterialStyles from './theme.scss';
 import Typography from './typography.scss';
+console.log('asfa');
 
 async function load(e) {
     /* set nav icon to a brain */
