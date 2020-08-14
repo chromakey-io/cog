@@ -5,56 +5,90 @@ import {ErrorMessage} from '../utils.js';
 
 import {MDCDataTable} from '@material/data-table';
 
+import {Card} from '../card/mwc-card';
+import {CardMedia} from '../card-media/mwc-card-media';
+import {CardPrimaryAction} from '../card-primary-action/mwc-card-primary-action';
+
+
 import {default as TableStyles} from '@material/data-table/dist/mdc.data-table.css';
 import {default as ElevationStyles} from '@material/elevation/dist/mdc.elevation.css';
+import {default as TypographyStyles} from '@material/typography/dist/mdc.typography.css';
 
-export class SubjectDetail extends LitElement {
+
+import {DonutChart} from "@carbon/charts/charts";
+
+import {default as ChartStyles} from "@carbon/charts/styles.css";
+
+const CardStyles = css`
+            mwc-card {
+                width:100%;
+            }
+            .card__header {
+                display: flex;
+                flex-direction: row;
+                padding: 16px;
+                background: var(--mdc-theme-on-primary, #eee);
+            }
+            
+            .card__header-text {
+                display: flex;
+                flex-direction: column;
+            }
+            
+            .card__title,
+            .card__subtitle,
+            .card__secondary {
+                font-family: Roboto, sans-serif;
+            }
+            
+            .card__title {
+                font-size: 1.25rem;
+                font-weight: 500;
+                line-height: 2rem;
+                color: rgba(0, 0, 0);
+            }
+            
+            .card__subtitle {
+                font-size: .875rem;
+                line-height: 1.375rem;
+                font-weight: 500;
+                color: rgba(0, 0, 0, 0.54);
+                text-decoration: inherit;
+                text-decoration-line: inherit;
+                text-decoration-style: inherit;
+                text-decoration-color: inherit;
+            }
+            
+            .card__secondary {
+                font-size: .875rem;
+                line-height: 1.25rem;
+                font-weight: 400;
+                color: rgba(0, 0, 0, 0.54);
+                text-decoration: inherit;
+                text-transform: inherit;
+            }
+        `;
+
+
+export class TrialData extends LitElement {
 
     static get styles() {
-        return [TableStyles, ElevationStyles, css`
-        .mdc-data-table__table{ width: 100% }
-        .mdc-data-table{ 
-            padding: 12px;
-            background: var(--mdc-theme-on-primary, #eee);
-            border: none;
-        }
-        .mdc-data-table__table-container{
-            background: var(--mdc-theme-background, #e1e2e1);
-        }
-        .card {
-            background:lightgray;
-        }`];
-    }
-
-    static get properties() {
-        return {
-            research_id: {type: String},
-            id: {type: String},
-            identity: {type: String},
-            age: {type: Number}
-        }
+        return [TableStyles,
+            css`.mdc-data-table{
+                width:100%;
+                border:none;
+            }`];
     }
 
     constructor(options) {
         super();
         this._token = options.token;
         this.id = options.id;
-
-        this.handler();
     }
 
     render() {
         return html`
-        <mwc-layout-grid class="card">
-            <mwc-layout-grid-cell span="1"></mwc-layout-grid-cell>
-            <mwc-layout-grid-cell span="10">
-                <span>Identity: ${this.identity}</span>
-                <span>Age: ${this.age}</span>
-            </mwc-layout-grid-cell>
-            <mwc-layout-grid-cell span="1"></mwc-layout-grid-cell>
-            <mwc-layout-grid-cell span="1"></mwc-layout-grid-cell>
-            <mwc-layout-grid-cell span="10">
-                <div class="mdc-data-table mdc-elevation--z1">
+                <div class="mdc-data-table">
                     <div class="mdc-data-table__table-container">
                     <table class="mdc-data-table__table" aria-label="Trial Data">
                         <thead>
@@ -88,15 +122,146 @@ export class SubjectDetail extends LitElement {
                     </table>
                     </div>
                 </div>
-            </mwc-layout-grid-cell>
-            <mwc-layout-grid-cell span="1"></mwc-layout-grid-cell>
-        </mwc-layout-grid>
         `;
     }
 
-    firstUpdated() {
-        const trials = this.shadowRoot.getElementById('#trials');
-        const dataTable = new MDCDataTable(trials);
+    async _searchHandler(event) {
+        return
+    }
+};
+
+window.customElements.define('trial-data', TrialData);
+
+
+export class DataChart extends LitElement{
+
+    static get styles() {
+        return [ChartStyles, CardStyles,
+            css`#donut-body{ 
+                    width: calc(50% - 256px); 
+                    margin:0 auto;
+                    padding:24px;:
+                }`
+        ];
+    }
+
+   static get properties() {
+        return {
+            data: {type: Array}
+        }
+    }
+
+    constructor(options) {
+        
+        super();
+
+        this._options = {
+            "donut": {
+                "center": {
+                    "label": "Trial Summary"
+                }
+            },
+            "height": "256px"
+        };
+
+        this.data = [
+            {
+                "group": "Ham",
+                "value": 20000
+            },
+            {
+                "group": "Cheese",
+                "value": 65000
+            },
+            {
+                "group": "Sandwiches",
+                "value": 75000
+            }
+        ];
+    }
+
+    render() {
+        return html`
+            <mwc-card fullBleed>
+                <div class="card__header mdc-typography mdc-typography--body2">
+                    <div class="card__header-text mdc-typography mdc-typography--body2">
+                        <div class="card__title">Donut Chart: </div>
+                        <div class="card__subtitle">trial summary</div>
+                    </div>
+                </div>
+                <div id="donut-body" class="card__secondary mdc-typography mdc-typography--body2">
+                    <!-- CHART CONTENT -->
+                </div>
+            </mwc-card>
+        `;
+    }
+
+    firstUpdated(properties) {
+        const options = {'data': this.data, 'options': this._options}
+
+        const container = this.shadowRoot.getElementById('donut-body');
+        const donut = new DonutChart(container, options);
+    }
+};
+
+window.customElements.define('data-chart', DataChart);
+
+export class SubjectDetail extends LitElement {
+    static get styles() {
+        return [CardStyles];
+    }
+   static get properties() {
+        return {
+            research_id: {type: String},
+            id: {type: String},
+            identity: {type: String},
+            age: {type: Number}
+        }
+    }
+
+    constructor(options) {
+        super();
+        this._token = options.token;
+        this.id = options.id;
+
+        this.handler();
+    }
+
+    render() {
+        const data = new TrialData({'token': this._token, 'id': this.id});
+
+        const chart = new DataChart();
+
+        return html`
+        <mwc-layout-grid>
+            <mwc-layout-grid-cell span="2"></mwc-layout-grid-cell>
+            <mwc-layout-grid-cell span="8">
+                <mwc-card fullBleed>
+                    <div class="card__header mdc-typography mdc-typography--body2">
+                        <div class="card__header-text mdc-typography mdc-typography--body2">
+                            <div class="card__title">Identity: ${this.identity}</div>
+                            <div class="card__subtitle">age: ${this.age}</div>
+                        </div>
+                    </div>
+                    <div class="card__secondary mdc-typography mdc-typography--body2">
+                        ${data}
+                    </div>
+                    <mwc-button slot="button">
+                        <mwc-icon slot="graphic">directions_run</mwc-icon>
+                        Run New Trial
+                    </mwc-button>
+                </mwc-card>
+            </mwc-layout-grid-cell>
+            <mwc-layout-grid-cell span="2"></mwc-layout-grid-cell>
+            <mwc-layout-grid-cell span="2"></mwc-layout-grid-cell>
+            <mwc-layout-grid-cell span="8">
+                ${chart}
+            </mwc-layout-grid-cell>
+            <mwc-layout-grid-cell span="2"></mwc-layout-grid-cell>
+            <mwc-layout-grid-cell span="12"></mwc-layout-grid-cell>
+
+        </mwc-layout-grid>
+        `;
     }
 
     async _handleSearch(event) {
@@ -118,7 +283,7 @@ export class SubjectDetail extends LitElement {
             this.age = subject.age;
         } else {
             const error = new ErrorMessage({'message':"Error Loading Subject"});
-            document.getElementById('content').appendChild(error);        
+            document.getElementById('content').appendChild(error);
         }
     }
 };

@@ -31,6 +31,7 @@
   },
   "dependencies": {
     "@auth0/auth0-spa-js": "latest",
+    "@carbon/charts": "latest",
     "@carbon/icon-helpers": "latest",
     "@carbon/icons": "latest",
     "@carbon/themes": "latest",
@@ -39,6 +40,7 @@
     "@material/mwc-button": "latest",
     "@material/mwc-dialog": "latest",
     "@material/mwc-drawer": "latest",
+    "@material/mwc-fab": "latest",
     "@material/mwc-icon": "latest",
     "@material/mwc-icon-button": "latest",
     "@material/mwc-linear-progress": "latest",
@@ -49,8 +51,9 @@
     "@material/theme": "^8.0.0-canary.096a7a066.0",
     "carbon-components": "latest",
     "carbon-web-components": "latest",
+    "d3": "latest",
     "lit-element": "latest",
     "lit-html": "latest",
-    "material-web-components-layout-grid": "latest"
+    "material-web-components-layout-grid": "^0.12.1"
   }
 }
