@@ -8,17 +8,18 @@ import {Button} from '@material/mwc-button/mwc-button';
 
 import {TextField} from '@material/mwc-textfield/mwc-textfield';
 
-import {Snackbar} from '@material/mwc-snackbar';
-
 import CognitiveIcon from '@carbon/icons/es/cognitive/32';
-import {getAttributes, toSVG} from '@carbon/icon-helpers';
+import {toSVG} from '@carbon/icon-helpers';
 
 import MaterialStyles from './theme.scss';
 import Typography from './typography.scss';
-console.log('asfa');
+
+import { LinearProgress } from '@material/mwc-linear-progress';
 
 async function load(e) {
     /* set nav icon to a brain */
+    const progress = document.querySelector('#page-load-progress');
+
     const logo = document.getElementById('logo');
     const logo_brain = toSVG({...CognitiveIcon, attrs: CognitiveIcon.attrs});
     logo.appendChild(logo_brain);
@@ -57,6 +58,8 @@ async function load(e) {
     });
 
     const {ErrorMessage} = await import ('./utils.js');
+
+    progress.remove();
 
     const error = new ErrorMessage({'message':"LOADING COMPLETE"});
     document.getElementById('content').appendChild(error);

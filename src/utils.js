@@ -1,4 +1,5 @@
 import {LitElement, html} from 'lit-element';
+import {Snackbar} from '@material/mwc-snackbar';
 
 export class ErrorMessage extends LitElement {
     static get properties() {

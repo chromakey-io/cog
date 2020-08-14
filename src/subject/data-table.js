@@ -16,8 +16,7 @@ import BXTableToolbarSearch from 'carbon-web-components/es/components/data-table
 */
 
 
-html`
-        <mwc-layout-grid>
+html`   <mwc-layout-grid>
             <mwc-layout-grid-cell span="2"></mwc-layout-grid-cell>
             <mwc-layout-grid-cell span="8">
                 <span>Identity: ${this.identity}</span>

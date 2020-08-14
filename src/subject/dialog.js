@@ -1,9 +1,16 @@
-import {LitElement, html} from 'lit-element';
+import {LitElement, html, css} from 'lit-element';
 
 import {ErrorMessage} from '../utils.js';
 
 export class SubjectDialog extends LitElement {
 
+    static get styles() {
+        return css`
+            mwc-textfield {
+                width:100%;
+            }
+        `;
+    }
     constructor (options) {
         super();
         this._token = options.token;
@@ -29,7 +36,7 @@ export class SubjectDialog extends LitElement {
                 <mwc-textfield outlined label="Identity" icon="face" maxLength="255" required="true" id="identity"></mwc-textfield>
                 </p>
                 <p>
-                    <mwc-textfield outlined label="Birthdate" helper="Birthdate" required="true" icon="today" type="date" id="birthdate"></mwc-textfield>
+                <mwc-textfield outlined label="Birthdate" helper="Birthdate" required="true" icon="today" type="date" id="birthdate"></mwc-textfield>
                 </p>
                 <mwc-button id="submit-id" @click=${this.handler} slot="primaryAction">Confirm</mwc-button>
                 <mwc-button id="cancel-id" @click=${this.destroy} slot="secondaryAction" dialogAction="close">Cancel</mwc-button>

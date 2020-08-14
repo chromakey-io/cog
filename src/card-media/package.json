@@ -1,0 +1,19 @@
+{
+  "name": "@material/mwc-card-media",
+  "version": "0.14.1",
+  "description": "",
+  "main": "mwc-card-media.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@material/card": "=6.0.0-canary.6a40ef217.0",
+    "lit-element": "^2.3.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "private": true
+}

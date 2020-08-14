@@ -31,8 +31,8 @@
   },
   "dependencies": {
     "@auth0/auth0-spa-js": "latest",
-    "@carbon/icon-helpers": "^10.9.0",
-    "@carbon/icons": "^10.15.0",
+    "@carbon/icon-helpers": "latest",
+    "@carbon/icons": "latest",
     "@carbon/themes": "latest",
     "@material/data-table": "latest",
     "@material/layout-grid": "latest",
@@ -41,6 +41,7 @@
     "@material/mwc-drawer": "latest",
     "@material/mwc-icon": "latest",
     "@material/mwc-icon-button": "latest",
+    "@material/mwc-linear-progress": "latest",
     "@material/mwc-list": "latest",
     "@material/mwc-snackbar": "latest",
     "@material/mwc-textfield": "latest",
@@ -50,6 +51,6 @@
     "carbon-web-components": "latest",
     "lit-element": "latest",
     "lit-html": "latest",
-    "material-web-components-layout-grid": "^0.12.1"
+    "material-web-components-layout-grid": "latest"
   }
 }
