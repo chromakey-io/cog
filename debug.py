@@ -1,4 +1,5 @@
 from subject.models import Subject
+from trial.models import Trial
 from settings import RESEARCH_ID
 
 async def bootstrap():
@@ -18,3 +19,10 @@ async def bootstrap():
     sub.research_id = RESEARCH_ID
     sub.identifier = "Betty Boop"
     await sub.save()
+
+    tri = Trial()
+    tri.subject = "Betty Boop"
+    tri.trial_name = "Professor X"
+    await tri.save()
+
+    

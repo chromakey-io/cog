@@ -6,6 +6,8 @@ class Subject(models.Model):
     research_id = fields.CharField(max_length=255)
 
     identifier = fields.CharField(max_length=255)
+
+    trials: fields.ReverseRelation['Trial']
     
     @property
     def name(self):
