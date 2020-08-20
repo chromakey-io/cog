@@ -16,6 +16,7 @@ from auth.backends import Auth0Backend, auth_error_handler
 
 from auth.views import options
 from subject.views import SubjectREST, subjects
+from trial.views import TrialREST, trials
 from views import index, authorize, error, private
 
 from settings import DEBUG
@@ -44,9 +45,9 @@ middleware = [
     ]
 
 async def init_orm() -> None:  # pylint: disable=W0612
-    if DEBUG: await Tortoise.init(db_url="sqlite://:memory:", modules={"models": ["subject.models"]})
+    if DEBUG: await Tortoise.init(db_url="sqlite://:memory:", modules={"models": ["subject.models"], "trails": ["trial.models"]})
     else: # TODO: register a REAL database :)
-        await Tortoise.init(db_url="sqlite://:memory:", modules={"models": ["subject.models"]})
+        await Tortoise.init(db_url="sqlite://:memory:", modules={"models": ["subject.models"],"trails": ["trial.models"]})
 
     await Tortoise.generate_schemas()
 

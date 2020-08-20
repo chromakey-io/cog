@@ -1,6 +1,7 @@
 import datetime
 
 from subject.models import Subject
+from trial.models import Trial
 from settings import RESEARCH_ID
 
 async def bootstrap():
@@ -23,3 +24,10 @@ async def bootstrap():
     sub.identity = "Betty Boop"
     sub.birthdate = datetime.date(month=1, day=1, year=1930)
     await sub.save()
+
+    tri = Trial()
+    tri.subject = "Betty Boop"
+    tri.trial_name = "Professor X"
+    await tri.save()
+
+    
