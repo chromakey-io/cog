@@ -8,15 +8,17 @@ from starlette.endpoints import HTTPEndpoint
 
 from starlette.authentication import requires
 
-#@requires('authenticated')
+# @requires('authenticated')
 async def subjects(request: Request):
-    results = await SubjectModel.filter(research_id = request.user.identity)
+    results = await SubjectModel.filter(research_id=request.user.identity)
     data = []
     for result in results:
-        data.append({
-            'id':result.id,
-            'research_id': result.research_id,
-            'identity': result.identity,
-            'age': result.age
-        })
+        data.append(
+            {
+                "id": result.id,
+                "research_id": result.research_id,
+                "identity": result.identity,
+                "age": result.age,
+            }
+        )
     return JSONResponse(data)

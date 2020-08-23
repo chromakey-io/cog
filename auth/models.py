@@ -1,5 +1,6 @@
 from starlette.authentication import BaseUser
 
+
 class TokenUser(BaseUser):
     def __init__(self, payload: dict) -> None:
         self.payload = payload
@@ -11,8 +12,8 @@ class TokenUser(BaseUser):
     @property
     def display_name(self) -> str:
         return self.payload
-    
+
     @property
     def identity(self) -> str:
-        sub = self.payload.get('sub').split('|')
+        sub = self.payload.get("sub").split("|")
         return sub[1]

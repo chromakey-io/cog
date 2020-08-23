@@ -3,13 +3,16 @@ from starlette.requests import Request
 
 from settings import AUTH_ISSUER, AUTH_AUDIENCE, AUTH_CLIENT_ID
 
+
 def options(request: Request):
-    json = {'domain': AUTH_ISSUER,
-            'audience': AUTH_AUDIENCE,
-            'client_id': AUTH_CLIENT_ID,
-            'redirect_uri': 'http://localhost:8000'
+    json = {
+        "domain": AUTH_ISSUER,
+        "audience": AUTH_AUDIENCE,
+        "client_id": AUTH_CLIENT_ID,
+        "redirect_uri": "http://localhost:8000",
     }
     return JSONResponse(json)
+
 
 """
 from auth.utils import authenticated

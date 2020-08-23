@@ -1,12 +1,15 @@
 from tortoise import fields, models
 from subjects.models import SubjectModel
 
+
 class TrialModel(models.Model):
     id = fields.IntField(pk=True)
 
     name = fields.CharField(default="Trail Making Task", max_length=255)
 
-    subject: fields.ForeignKeyRelation[SubjectModel] = fields.ForeignKeyField("models.SubjectModel", related_name="trials", required=True)
+    subject: fields.ForeignKeyRelation[SubjectModel] = fields.ForeignKeyField(
+        "models.SubjectModel", related_name="trials", required=True
+    )
 
     created_at = fields.DatetimeField(auto_now_add=True)
 

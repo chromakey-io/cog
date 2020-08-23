@@ -7,7 +7,8 @@ from trials.models import TrialModel as Trial
 from starlette.authentication import requires
 from starlette.responses import JSONResponse
 
-@requires('authenticated')
+
+@requires("authenticated")
 async def bootstrap(request):
     """ research_id needs to match YOUR associated authentication key """
 
@@ -36,7 +37,7 @@ async def bootstrap(request):
     tri = Trial()
     tri.name = "Trail Making Task: 1"
     tri.subject = sub
-    tri.data = json.dumps({'hello':'world'})
+    tri.data = json.dumps({"hello": "world"})
     await tri.save()
 
     return JSONResponse({"message": "succss"})

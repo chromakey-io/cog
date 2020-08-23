@@ -5,16 +5,20 @@ from jose import jwt
 from starlette.requests import Request
 
 from starlette.authentication import (
-    AuthenticationBackend, AuthenticationError, UnauthenticatedUser,
-    AuthCredentials
+    AuthenticationBackend,
+    AuthenticationError,
+    UnauthenticatedUser,
+    AuthCredentials,
 )
 
 from starlette.responses import JSONResponse
 
 from auth.models import TokenUser
 
+
 def auth_error_handler(request: Request, exc: Exception):
     return JSONResponse({"error": str(exc)}, status_code=401)
+
 
 class Auth0Backend(AuthenticationBackend):
     async def get_scope(self, token):
@@ -37,18 +41,23 @@ class Auth0Backend(AuthenticationBackend):
 
         parts = auth.split()
         if parts[0].lower() != "bearer:":
-            raise AuthenticationError({"code": "invalid_header",
-                            "description":
-                                "Authorization header must start with"
-                                " Bearer"})
+            raise AuthenticationError(
+                {
+                    "code": "invalid_header",
+                    "description": "Authorization header must start with" " Bearer",
+                }
+            )
         elif len(parts) == 1:
-            raise AuthenticationError({"code": "invalid_header",
-                            "description": "Token not found"})
+            raise AuthenticationError(
+                {"code": "invalid_header", "description": "Token not found"}
+            )
         elif len(parts) > 2:
-            raise AuthenticationError({"code": "invalid_header",
-                            "description":
-                                "Authorization header must be"
-                                " Bearer token"})
+            raise AuthenticationError(
+                {
+                    "code": "invalid_header",
+                    "description": "Authorization header must be" " Bearer token",
+                }
+            )
 
         token = parts[1]
         return token
@@ -66,36 +75,46 @@ class Auth0Backend(AuthenticationBackend):
                         "kid": key["kid"],
                         "use": key["use"],
                         "n": key["n"],
-                        "e": key["e"]
+                        "e": key["e"],
                     }
             if rsa_key:
                 try:
                     payload = jwt.decode(
                         token,
                         rsa_key,
-                        algorithms = AUTH_ALGORITHMS,
-                        audience = AUTH_AUDIENCE,
-                        issuer = "https://{}/".format(AUTH_ISSUER)
+                        algorithms=AUTH_ALGORITHMS,
+                        audience=AUTH_AUDIENCE,
+                        issuer="https://{}/".format(AUTH_ISSUER),
                     )
                 except jwt.ExpiredSignatureError:
-                    raise AuthenticationError({"code": "token_expired",
-                                    "description": "token is expired"})
+                    raise AuthenticationError(
+                        {"code": "token_expired", "description": "token is expired"}
+                    )
                 except jwt.JWTClaimsError:
-                    raise AuthenticationError({"code": "invalid_claims",
-                                    "description":
-                                        "incorrect claims,"
-                                        "please check the audience and issuer"})
+                    raise AuthenticationError(
+                        {
+                            "code": "invalid_claims",
+                            "description": "incorrect claims,"
+                            "please check the audience and issuer",
+                        }
+                    )
                 except Exception:
-                    raise AuthenticationError({"code": "invalid_header",
-                                    "description":
-                                        "Unable to parse authentication"
-                                        " token."})
+                    raise AuthenticationError(
+                        {
+                            "code": "invalid_header",
+                            "description": "Unable to parse authentication" " token.",
+                        }
+                    )
 
-                scope =  await self.get_scope(token)
-                scope.append('authenticated')
+                scope = await self.get_scope(token)
+                scope.append("authenticated")
                 return AuthCredentials(scope), TokenUser(payload)
 
-            raise AuthenticationError({"code": "invalid_header",
-                            "description": "Unable to find appropriate key"})
-        
+            raise AuthenticationError(
+                {
+                    "code": "invalid_header",
+                    "description": "Unable to find appropriate key",
+                }
+            )
+
         return AuthCredentials(), UnauthenticatedUser()
