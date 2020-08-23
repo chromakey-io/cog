@@ -20,8 +20,6 @@ AUTH_ISSUER = config('AUTH_ISSUER', cast=str)
 AUTH_AUDIENCE = config('AUTH_AUDIENCE', cast=str)
 AUTH_ALGORITHMS = config('AUTH_ALGORITHMS', cast=CommaSeparatedStrings)
 
-RESEARCH_ID = config('RESEARCH_ID', cast=str)
-
 def get_json_keys():
     key_data = httpx.get("https://{}/.well-known/jwks.json".format(AUTH_ISSUER))
     keys = key_data.read()

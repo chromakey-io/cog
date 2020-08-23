@@ -17,6 +17,7 @@ import Typography from './typography.scss';
 import { LinearProgress } from '@material/mwc-linear-progress';
 
 async function load(e) {
+
     /* set nav icon to a brain */
     const progress = document.querySelector('#page-load-progress');
 
@@ -31,8 +32,18 @@ async function load(e) {
     const auth = new Authorize();
     await auth.init();
 
+
     const user = await auth.user();
+    console.log(user);
     document.getElementById('user-welcome').innerHTML = `${user.name}`;
+
+    const bootstrap = await fetch('/bootstrap', {
+                    method: 'GET',
+                    headers: {
+                        Authorization: 'Bearer: ' + auth.token
+                    },
+            });
+
 
     const {SubjectList} = await import('./subject/list.js');
 

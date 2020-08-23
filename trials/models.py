@@ -1,14 +1,14 @@
 from tortoise import fields, models
-from subject.models import Subject as Subject
+from subjects.models import SubjectModel
 
-class Trial(models.Model):
+class TrialModel(models.Model):
     id = fields.IntField(pk=True)
 
-    name = fields.TextField()
- 
-    subject: fields.ForeignKeyRelation[Subject] = fields.ForeignKeyField("models.Subject", required=True, related_name="trials")
+    name = fields.CharField(default="Trail Making Task", max_length=255)
 
-    created_at = fields.DatetimeField(auto_now_add=False)
+    subject: fields.ForeignKeyRelation[SubjectModel] = fields.ForeignKeyField("models.SubjectModel", related_name="trials", required=True)
+
+    created_at = fields.DatetimeField(auto_now_add=True)
 
     data = fields.JSONField()
 
@@ -17,6 +17,8 @@ class Trial(models.Model):
 
         then you use a property field to construct the common name, while still 
         having access to the seperated first/last names in the DB
+
+        So having a name @property is redundant :/
 
     @property
     def name(self):

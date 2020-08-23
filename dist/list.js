@@ -3090,15 +3090,6 @@ var ScaleTypes;
     ScaleTypes["LABELS"] = "labels";
 })(ScaleTypes || (ScaleTypes = {}));
 /**
- * enum of supported tooltip position relative to
- */
-var TooltipPosition;
-(function (TooltipPosition) {
-    TooltipPosition["MOUSE"] = "mouse";
-    TooltipPosition["TOP"] = "top";
-    TooltipPosition["BOTTOM"] = "bottom";
-})(TooltipPosition || (TooltipPosition = {}));
-/**
  * enum of all possible legend positions
  */
 var LegendPositions;
@@ -10205,6 +10196,117 @@ module.exports = exports.default;
 });
 
 var _a;
+var area = {
+    opacity: {
+        unselected: 0,
+        selected: 0.4
+    }
+};
+var axis = {
+    ticks: {
+        number: 7,
+        rotateIfSmallerThan: 30,
+        verticalSpaceRatio: 2.5,
+        horizontalSpaceRatio: 3.5
+    },
+    paddingRatio: 0.1
+};
+var legend = {
+    items: {
+        status: {
+            ACTIVE: 1,
+            DISABLED: 0
+        },
+        horizontalSpace: 12,
+        verticalSpace: 24,
+        textYOffset: 8
+    },
+    checkbox: {
+        radius: 6.5,
+        spaceAfter: 4
+    }
+};
+var lines = {
+    opacity: {
+        unselected: 0.3,
+        selected: 1
+    }
+};
+var meter = {
+    statusBar: {
+        paddingRight: 5
+    },
+    status: {
+        indicatorSize: 16,
+        paddingLeft: 15
+    }
+};
+var pie = {
+    radiusOffset: -15,
+    innerRadius: 2,
+    padAngle: 0.007,
+    hoverArc: {
+        outerRadiusOffset: 3
+    },
+    xOffset: 30,
+    yOffset: 20,
+    yOffsetCallout: 10,
+    callout: {
+        minSliceDegree: 5,
+        offsetX: 15,
+        offsetY: 12,
+        horizontalLineLength: 8,
+        textMargin: 2
+    }
+};
+var radar = {
+    opacity: {
+        unselected: 0.1,
+        selected: 0.3
+    },
+    xLabelPadding: 10,
+    yLabelPadding: 8,
+    yTicksNumber: 4,
+    minRange: 10,
+    xAxisRectHeight: 50,
+    dotsRadius: 5
+};
+var spacers = {
+    default: {
+        size: 24
+    }
+};
+var tooltips = {
+    horizontalOffset: 10
+};
+/**
+ * Base transition configuration
+ */
+var transitions = {
+    default: {
+        duration: 300
+    },
+    pie_slice_mouseover: {
+        duration: 100
+    },
+    pie_chart_titles: {
+        duration: 375
+    },
+    graph_element_mouseover_fill_update: {
+        duration: 100
+    },
+    graph_element_mouseout_fill_update: {
+        duration: 100
+    }
+};
+var zoomBar = {
+    height: (_a = {},
+        _a[ZoomBarTypes.GRAPH_VIEW] = 32,
+        _a[ZoomBarTypes.SLIDER_VIEW] = 10,
+        _a),
+    spacerHeight: 8
+};
+
 /*
  *****************************
  * User configurable options *
@@ -10221,23 +10323,10 @@ var standardTruncationOptions = {
 /**
  * Legend options
  */
-var legend = {
+var legend$1 = {
     enabled: true,
     position: LegendPositions.BOTTOM,
     clickable: true,
-    items: {
-        status: {
-            ACTIVE: 1,
-            DISABLED: 0
-        },
-        horizontalSpace: 12,
-        verticalSpace: 24,
-        textYOffset: 8
-    },
-    checkbox: {
-        radius: 6.5,
-        spaceAfter: 4
-    },
     truncation: standardTruncationOptions,
     alignment: Alignments.LEFT,
     order: null
@@ -10247,7 +10336,7 @@ var legend = {
  */
 var grid = {
     x: {
-        numberOfTicks: 5
+        numberOfTicks: 15
     },
     y: {
         numberOfTicks: 5
@@ -10257,7 +10346,6 @@ var grid = {
  * Tooltip options
  */
 var baseTooltip = {
-    horizontalOffset: 10,
     showTotal: true,
     valueFormatter: function (d) { return d.toLocaleString(); },
     truncation: standardTruncationOptions
@@ -10307,7 +10395,7 @@ var chart = {
     height: null,
     resizable: true,
     tooltip: baseTooltip,
-    legend: legend,
+    legend: legend$1,
     style: {
         prefix: "cc"
     },
@@ -10415,22 +10503,6 @@ var bubbleChart = Tools.merge({}, axisChart, {
  */
 var pieChart = Tools.merge({}, chart, {
     pie: {
-        radiusOffset: -15,
-        innerRadius: 2,
-        padAngle: 0.007,
-        hoverArc: {
-            outerRadiusOffset: 3
-        },
-        xOffset: 30,
-        yOffset: 20,
-        yOffsetCallout: 10,
-        callout: {
-            minSliceDegree: 5,
-            offsetX: 15,
-            offsetY: 12,
-            horizontalLineLength: 8,
-            textMargin: 2
-        },
         labels: {
             formatter: null
         },
@@ -10485,14 +10557,9 @@ var meterChart = Tools.merge({}, chart, {
     meter: {
         height: 8,
         statusBar: {
-            paddingRight: 5,
             percentageIndicator: {
                 enabled: true
             }
-        },
-        status: {
-            indicatorSize: 16,
-            paddingLeft: 15
         }
     }
 });
@@ -10505,16 +10572,6 @@ var radarChart = Tools.merge({}, chart, {
             angle: "key",
             value: "value"
         },
-        opacity: {
-            unselected: 0.1,
-            selected: 0.3
-        },
-        xLabelPadding: 10,
-        yLabelPadding: 8,
-        yTicksNumber: 4,
-        minRange: 10,
-        xAxisRectHeight: 50,
-        dotsRadius: 5,
         alignment: Alignments.LEFT
     },
     tooltip: {
@@ -10543,65 +10600,6 @@ var options = {
     radarChart: radarChart,
     gaugeChart: gaugeChart
 };
-/**
- * Options for line behaviour
- */
-var lines = {
-    opacity: {
-        unselected: 0.3,
-        selected: 1
-    }
-};
-/**
- * Options for area behaviour
- */
-var area = {
-    opacity: {
-        unselected: 0,
-        selected: 0.4
-    }
-};
-/**
- * Base transition configuration
- */
-var transitions = {
-    default: {
-        duration: 300
-    },
-    pie_slice_mouseover: {
-        duration: 100
-    },
-    pie_chart_titles: {
-        duration: 375
-    },
-    graph_element_mouseover_fill_update: {
-        duration: 100
-    },
-    graph_element_mouseout_fill_update: {
-        duration: 100
-    }
-};
-var axis = {
-    ticks: {
-        number: 7,
-        rotateIfSmallerThan: 30
-    },
-    paddingRatio: 0.1
-};
-var spacers = {
-    default: {
-        size: 24
-    }
-};
-var zoomBar = {
-    height: (_a = {},
-        _a[ZoomBarTypes.GRAPH_VIEW] = 32,
-        _a[ZoomBarTypes.SLIDER_VIEW] = 10,
-        _a),
-    spacerHeight: 8
-};
-var tickSpaceRatioVertical = 2.5;
-var tickSpaceRatioHorizontal = 3.5;
 
 /**
  * Copyright IBM Corp. 2018, 2018
@@ -12118,10 +12116,16 @@ function continuous(transform, untransform) {
   return transformer()(transform, untransform);
 }
 
+function formatDecimal(x) {
+  return Math.abs(x = Math.round(x)) >= 1e21
+      ? x.toLocaleString("en").replace(/,/g, "")
+      : x.toString(10);
+}
+
 // Computes the decimal coefficient and exponent of the specified number x with
 // significant digits p, where x is positive and p is in [1, 21] or undefined.
-// For example, formatDecimal(1.23) returns ["123", 0].
-function formatDecimal(x, p) {
+// For example, formatDecimalParts(1.23) returns ["123", 0].
+function formatDecimalParts(x, p) {
   if ((i = (x = p ? x.toExponential(p - 1) : x.toExponential()).indexOf("e")) < 0) return null; // NaN, ±Infinity
   var i, coefficient = x.slice(0, i);
 
@@ -12134,7 +12138,7 @@ function formatDecimal(x, p) {
 }
 
 function exponent(x) {
-  return x = formatDecimal(Math.abs(x)), x ? x[1] : NaN;
+  return x = formatDecimalParts(Math.abs(x)), x ? x[1] : NaN;
 }
 
 function formatGroup(grouping, thousands) {
@@ -12227,7 +12231,7 @@ function formatTrim(s) {
 var prefixExponent;
 
 function formatPrefixAuto(x, p) {
-  var d = formatDecimal(x, p);
+  var d = formatDecimalParts(x, p);
   if (!d) return x + "";
   var coefficient = d[0],
       exponent = d[1],
@@ -12236,11 +12240,11 @@ function formatPrefixAuto(x, p) {
   return i === n ? coefficient
       : i > n ? coefficient + new Array(i - n + 1).join("0")
       : i > 0 ? coefficient.slice(0, i) + "." + coefficient.slice(i)
-      : "0." + new Array(1 - i).join("0") + formatDecimal(x, Math.max(0, p + i - 1))[0]; // less than 1y!
+      : "0." + new Array(1 - i).join("0") + formatDecimalParts(x, Math.max(0, p + i - 1))[0]; // less than 1y!
 }
 
 function formatRounded(x, p) {
-  var d = formatDecimal(x, p);
+  var d = formatDecimalParts(x, p);
   if (!d) return x + "";
   var coefficient = d[0],
       exponent = d[1];
@@ -12253,7 +12257,7 @@ var formatTypes = {
   "%": function(x, p) { return (x * 100).toFixed(p); },
   "b": function(x) { return Math.round(x).toString(2); },
   "c": function(x) { return x + ""; },
-  "d": function(x) { return Math.round(x).toString(10); },
+  "d": formatDecimal,
   "e": function(x, p) { return x.toExponential(p); },
   "f": function(x, p) { return x.toFixed(p); },
   "g": function(x, p) { return x.toPrecision(p); },
@@ -12989,6 +12993,8 @@ function formatLocale$1(locale) {
     "d": formatDayOfMonth,
     "e": formatDayOfMonth,
     "f": formatMicroseconds,
+    "g": formatYearISO,
+    "G": formatFullYearISO,
     "H": formatHour24,
     "I": formatHour12,
     "j": formatDayOfYear,
@@ -13022,6 +13028,8 @@ function formatLocale$1(locale) {
     "d": formatUTCDayOfMonth,
     "e": formatUTCDayOfMonth,
     "f": formatUTCMicroseconds,
+    "g": formatUTCYearISO,
+    "G": formatUTCFullYearISO,
     "H": formatUTCHour24,
     "I": formatUTCHour12,
     "j": formatUTCDayOfYear,
@@ -13055,6 +13063,8 @@ function formatLocale$1(locale) {
     "d": parseDayOfMonth,
     "e": parseDayOfMonth,
     "f": parseMicroseconds,
+    "g": parseYear,
+    "G": parseFullYear,
     "H": parseHour24,
     "I": parseHour24,
     "j": parseDayOfYear,
@@ -13476,9 +13486,13 @@ function formatWeekNumberSunday(d, p) {
   return pad(sunday.count(year(d) - 1, d), p, 2);
 }
 
-function formatWeekNumberISO(d, p) {
+function dISO(d) {
   var day = d.getDay();
-  d = (day >= 4 || day === 0) ? thursday(d) : thursday.ceil(d);
+  return (day >= 4 || day === 0) ? thursday(d) : thursday.ceil(d);
+}
+
+function formatWeekNumberISO(d, p) {
+  d = dISO(d);
   return pad(thursday.count(year(d), d) + (year(d).getDay() === 4), p, 2);
 }
 
@@ -13494,7 +13508,18 @@ function formatYear(d, p) {
   return pad(d.getFullYear() % 100, p, 2);
 }
 
+function formatYearISO(d, p) {
+  d = dISO(d);
+  return pad(d.getFullYear() % 100, p, 2);
+}
+
 function formatFullYear(d, p) {
+  return pad(d.getFullYear() % 10000, p, 4);
+}
+
+function formatFullYearISO(d, p) {
+  var day = d.getDay();
+  d = (day >= 4 || day === 0) ? thursday(d) : thursday.ceil(d);
   return pad(d.getFullYear() % 10000, p, 4);
 }
 
@@ -13550,9 +13575,13 @@ function formatUTCWeekNumberSunday(d, p) {
   return pad(utcSunday.count(utcYear(d) - 1, d), p, 2);
 }
 
-function formatUTCWeekNumberISO(d, p) {
+function UTCdISO(d) {
   var day = d.getUTCDay();
-  d = (day >= 4 || day === 0) ? utcThursday(d) : utcThursday.ceil(d);
+  return (day >= 4 || day === 0) ? utcThursday(d) : utcThursday.ceil(d);
+}
+
+function formatUTCWeekNumberISO(d, p) {
+  d = UTCdISO(d);
   return pad(utcThursday.count(utcYear(d), d) + (utcYear(d).getUTCDay() === 4), p, 2);
 }
 
@@ -13568,7 +13597,18 @@ function formatUTCYear(d, p) {
   return pad(d.getUTCFullYear() % 100, p, 2);
 }
 
+function formatUTCYearISO(d, p) {
+  d = UTCdISO(d);
+  return pad(d.getUTCFullYear() % 100, p, 2);
+}
+
 function formatUTCFullYear(d, p) {
+  return pad(d.getUTCFullYear() % 10000, p, 4);
+}
+
+function formatUTCFullYearISO(d, p) {
+  var day = d.getUTCDay();
+  d = (day >= 4 || day === 0) ? utcThursday(d) : utcThursday.ceil(d);
   return pad(d.getUTCFullYear() % 10000, p, 4);
 }
 
@@ -14359,7 +14399,7 @@ function identity$4(d) {
   return d;
 }
 
-function pie() {
+function pie$1() {
   var value = identity$4,
       sortValues = descending,
       sort = null,
@@ -15444,7 +15484,10 @@ var ChartModel = /** @class */ (function () {
         var groupMapsTo = this.getOptions().data.groupMapsTo;
         var allDataFromDomain = this.getAllDataFromDomain();
         return allDataFromDomain.filter(function (datum) {
-            return dataGroups.find(function (dataGroup) { return dataGroup.name === datum[groupMapsTo] && dataGroup.status === ACTIVE; });
+            return dataGroups.find(function (dataGroup) {
+                return dataGroup.name === datum[groupMapsTo] &&
+                    dataGroup.status === ACTIVE;
+            });
         });
     };
     ChartModel.prototype.getData = function () {
@@ -22334,10 +22377,10 @@ var Legend$1 = /** @class */ (function (_super) {
             .append("g")
             .classed("legend-item", true)
             .classed("active", function (d, i) {
-            return d.status === options.legend.items.status.ACTIVE;
+            return d.status === legend.items.status.ACTIVE;
         });
         // Configs
-        var checkboxRadius = options.legend.checkbox.radius;
+        var checkboxRadius = legend.checkbox.radius;
         // Truncation
         // get user provided custom values for truncation
         var truncationType = Tools.getProperty(legendOptions, "truncation", "type");
@@ -22352,12 +22395,12 @@ var Legend$1 = /** @class */ (function (_super) {
             .attr("rx", 1)
             .attr("ry", 1)
             .style("fill", function (d) {
-            return d.status === options.legend.items.status.ACTIVE
+            return d.status === legend.items.status.ACTIVE
                 ? _this.model.getStrokeColor(d.name)
                 : null;
         })
             .classed("active", function (d, i) {
-            return d.status === options.legend.items.status.ACTIVE;
+            return d.status === legend.items.status.ACTIVE;
         });
         var addedLegendItemsText = addedLegendItems
             .append("text")
@@ -22396,7 +22439,8 @@ var Legend$1 = /** @class */ (function (_super) {
     Legend.prototype.sortDataGroups = function (dataGroups, legendOrder) {
         // Sort data in user defined order
         dataGroups.sort(function (dataA, dataB) {
-            return legendOrder.indexOf(dataA.name) - legendOrder.indexOf(dataB.name);
+            return legendOrder.indexOf(dataA.name) -
+                legendOrder.indexOf(dataB.name);
         });
         // If user only defined partial ordering, ordered items are placed before unordered ones
         if (legendOrder.length < dataGroups.length) {
@@ -22411,13 +22455,13 @@ var Legend$1 = /** @class */ (function (_super) {
         var svg = this.getContainerSVG();
         var options = this.model.getOptions();
         // Configs
-        var checkboxRadius = options.legend.checkbox.radius;
-        var legendItemsHorizontalSpacing = options.legend.items.horizontalSpace;
-        var legendItemsVerticalSpacing = options.legend.items.verticalSpace;
-        var legendTextYOffset = options.legend.items.textYOffset;
-        var spaceNeededForCheckbox = checkboxRadius * 2 + options.legend.checkbox.spaceAfter;
+        var checkboxRadius = legend.checkbox.radius;
+        var legendItemsHorizontalSpacing = legend.items.horizontalSpace;
+        var legendItemsVerticalSpacing = legend.items.verticalSpace;
+        var legendTextYOffset = legend.items.textYOffset;
+        var spaceNeededForCheckbox = checkboxRadius * 2 + legend.checkbox.spaceAfter;
         // Check if there are disabled legend items
-        var DISABLED = options.legend.items.status.DISABLED;
+        var DISABLED = legend.items.status.DISABLED;
         var dataGroups = this.model.getDataGroups();
         var hasDeactivatedItems = dataGroups.some(function (dataGroup) { return dataGroup.status === DISABLED; });
         var legendOrientation = Tools.getProperty(options, "legend", "orientation");
@@ -22508,7 +22552,7 @@ var Legend$1 = /** @class */ (function (_super) {
                 hoveredElement: select(this)
             });
             // Configs
-            var checkboxRadius = options.legend.checkbox.radius;
+            var checkboxRadius = legend.checkbox.radius;
             var hoveredItem = select(this);
             hoveredItem
                 .append("rect")
@@ -23212,7 +23256,7 @@ var MeterTitle = /** @class */ (function (_super) {
             : this.parent.node().getAttribute("width");
         // get the status from the model
         var status = this.model.getStatus();
-        var radius = Tools.getProperty(options, "meter", "status", "indicatorSize") / 2;
+        var radius = meter.status.indicatorSize / 2;
         // create a group for the icon/inner path
         var statusGroup = DOMUtils.appendOrSelect(svg, "g.status-indicator")
             .classed("status--" + status, status !== null)
@@ -23252,7 +23296,7 @@ var MeterTitle = /** @class */ (function (_super) {
         // append a percentage if it is enabled, update it
         var percentage = svg.selectAll("text.percent-value").data(data);
         // the horizontal offset of the percentage value from the title
-        var offset = Tools.getProperty(this.model.getOptions(), "meter", "statusBar", "paddingRight");
+        var offset = meter.statusBar.paddingRight;
         percentage
             .enter()
             .append("text")
@@ -23273,7 +23317,7 @@ var MeterTitle = /** @class */ (function (_super) {
         _super.prototype.truncateTitle.call(this, title, maxWidth);
         // update the position on the percentage to be inline with the title
         var tspan = DOMUtils.appendOrSelect(this.parent, "tspan");
-        var offset = Tools.getProperty(this.model.getOptions(), "meter", "statusBar", "paddingRight");
+        var offset = meter.statusBar.paddingRight;
         var tspanLength = Math.ceil(tspan.node().getComputedTextLength());
         var percentage = DOMUtils.appendOrSelect(this.parent, "text.percent-value");
         percentage.attr("x", +title.attr("x") +
@@ -23291,11 +23335,11 @@ var MeterTitle = /** @class */ (function (_super) {
             : this.parent.node().getAttribute("width");
         var percentage = DOMUtils.appendOrSelect(this.parent, "text.percent-value");
         // the title needs to fit the width of the container without crowding the status, and percentage value
-        var offset = Tools.getProperty(this.model.getOptions(), "meter", "statusBar", "paddingRight");
+        var offset = meter.statusBar.paddingRight;
         var percentageWidth = percentage.node().getComputedTextLength();
         var statusGroup = DOMUtils.appendOrSelect(this.parent, "g.status-indicator").node();
         var statusWidth = DOMUtils.getSVGElementSize(statusGroup, { useBBox: true }).width +
-            Tools.getProperty(this.model.getOptions(), "meter", "status", "paddingLeft");
+            meter.status.paddingLeft;
         return containerWidth - percentageWidth - offset - statusWidth;
     };
     /**
@@ -23352,7 +23396,7 @@ var Tooltip$1 = /** @class */ (function (_super) {
         });
         // listen to show-tooltip Custom Events to render the tooltip
         this.services.events.addEventListener(Events.Tooltip.SHOW, function (e) {
-            var data = e.detail.data;
+            var data = e.detail.data || e.detail.items;
             var defaultHTML = _this.getTooltipHTML(e);
             // if there is a provided tooltip HTML function call it
             if (Tools.getProperty(_this.model.getOptions(), "tooltip", "customHTML")) {
@@ -23414,9 +23458,9 @@ var Tooltip$1 = /** @class */ (function (_super) {
                     formattedItems
                         .map(function (item) {
                         return "<li>\n\t\t\t\t\t\t\t<div class=\"datapoint-tooltip " + (item.bold ? "bold" : "") + "\">\n\t\t\t\t\t\t\t\t" + (item.color
-                            ? '<a style="background-color: ' +
+                            ? "<a style=\"background-color: " +
                                 item.color +
-                                '" class="tooltip-color"></a>'
+                                "\" class=\"tooltip-color\"></a>"
                             : "") + "\n\t\t\t\t\t\t\t\t<p class=\"label\">" + item.label + "</p>\n\t\t\t\t\t\t\t\t<p class=\"value\">" + item.value + "</p>\n\t\t\t\t\t\t\t</div>\n\t\t\t\t\t\t</li>";
                     })
                         .join("") +
@@ -23468,7 +23512,7 @@ var Tooltip$1 = /** @class */ (function (_super) {
             width: holder.offsetWidth,
             height: holder.offsetHeight
         }); });
-        var horizontalOffset = this.model.getOptions().tooltip.horizontalOffset;
+        var horizontalOffset = tooltips.horizontalOffset;
         if (bestPlacementOption === PLACEMENTS.LEFT) {
             horizontalOffset *= -1;
         }
@@ -25093,8 +25137,7 @@ var Pie$1 = /** @class */ (function (_super) {
         eventsFragment.addEventListener(Events.Legend.ITEM_MOUSEOUT, this.handleLegendMouseOut);
     };
     Pie.prototype.getInnerRadius = function () {
-        var options = this.model.getOptions();
-        return options.pie.innerRadius;
+        return pie.innerRadius;
     };
     Pie.prototype.render = function (animate) {
         if (animate === void 0) { animate = true; }
@@ -25109,12 +25152,12 @@ var Pie$1 = /** @class */ (function (_super) {
         // Set the hover arc radius
         this.hoverArc = arc()
             .innerRadius(this.getInnerRadius())
-            .outerRadius(radius + options.pie.hoverArc.outerRadiusOffset);
+            .outerRadius(radius + pie.hoverArc.outerRadiusOffset);
         // Setup the pie layout
-        var pieLayout = pie()
+        var pieLayout = pie$1()
             .value(function (d) { return d.value; })
             .sort(null)
-            .padAngle(options.pie.padAngle);
+            .padAngle(pie.padAngle);
         // Sort pie layout data based off of the indecies the layout creates
         var pieLayoutData = pieLayout(displayData).sort(function (a, b) { return a.index - b.index; });
         // Update data on all slices
@@ -25195,16 +25238,16 @@ var Pie$1 = /** @class */ (function (_super) {
             var sliceAngleDeg = (d.endAngle - d.startAngle) * (180 / Math.PI);
             // check if last 2 slices (or just last) are < the threshold
             if (i >= totalSlices - 2) {
-                if (sliceAngleDeg < options.pie.callout.minSliceDegree) {
+                if (sliceAngleDeg < pie.callout.minSliceDegree) {
                     var labelTranslateX = void 0, labelTranslateY = void 0;
                     if (d.index === totalSlices - 1) {
                         labelTranslateX =
                             d.xPosition +
-                                options.pie.callout.offsetX +
-                                options.pie.callout.textMargin +
+                                pie.callout.offsetX +
+                                pie.callout.textMargin +
                                 d.textOffsetX;
                         labelTranslateY =
-                            d.yPosition - options.pie.callout.offsetY;
+                            d.yPosition - pie.callout.offsetY;
                         // Set direction of callout
                         d.direction = CalloutDirections.RIGHT;
                         calloutData.push(d);
@@ -25212,11 +25255,11 @@ var Pie$1 = /** @class */ (function (_super) {
                     else {
                         labelTranslateX =
                             d.xPosition -
-                                options.pie.callout.offsetX -
+                                pie.callout.offsetX -
                                 d.textOffsetX -
-                                options.pie.callout.textMargin;
+                                pie.callout.textMargin;
                         labelTranslateY =
-                            d.yPosition - options.pie.callout.offsetY;
+                            d.yPosition - pie.callout.offsetY;
                         // Set direction of callout
                         d.direction = CalloutDirections.LEFT;
                         calloutData.push(d);
@@ -25236,16 +25279,16 @@ var Pie$1 = /** @class */ (function (_super) {
             useAttr: true
         }).width;
         // Position Pie
-        var pieTranslateX = radius + options.pie.xOffset;
+        var pieTranslateX = radius + pie.xOffset;
         if (alignment === Alignments.CENTER) {
             pieTranslateX = width / 2;
         }
         else if (alignment === Alignments.RIGHT) {
-            pieTranslateX = width - radius - options.pie.xOffset;
+            pieTranslateX = width - radius - pie.xOffset;
         }
-        var pieTranslateY = radius + options.pie.yOffset;
+        var pieTranslateY = radius + pie.yOffset;
         if (calloutData.length > 0) {
-            pieTranslateY += options.pie.yOffsetCallout;
+            pieTranslateY += pie.yOffsetCallout;
         }
         svg.attr("transform", "translate(" + pieTranslateX + ", " + pieTranslateY + ")");
         // Add event listeners
@@ -25255,7 +25298,6 @@ var Pie$1 = /** @class */ (function (_super) {
         var svg = DOMUtils.appendOrSelect(this.getContainerSVG(), "g.callouts")
             .attr("role", Roles.GROUP)
             .attr("aria-label", "callouts");
-        var options = this.model.getOptions();
         // Update data on callouts
         var callouts = svg.selectAll("g.callout").data(calloutData);
         callouts.exit().remove();
@@ -25277,12 +25319,14 @@ var Pie$1 = /** @class */ (function (_super) {
                 };
                 // end position for the callout line
                 d.endPos = {
-                    x: xPosition + options.pie.callout.offsetX,
-                    y: yPosition - options.pie.callout.offsetY + d.textOffsetY
+                    x: xPosition + pie.callout.offsetX,
+                    y: yPosition -
+                        pie.callout.offsetY +
+                        d.textOffsetY
                 };
                 // the intersection point of the vertical and horizontal line
                 d.intersectPointX =
-                    d.endPos.x - options.pie.callout.horizontalLineLength;
+                    d.endPos.x - pie.callout.horizontalLineLength;
             }
             else {
                 // start position for the callout line
@@ -25292,12 +25336,14 @@ var Pie$1 = /** @class */ (function (_super) {
                 };
                 // end position for the callout line should be bottom aligned to the title
                 d.endPos = {
-                    x: xPosition - options.pie.callout.offsetX,
-                    y: yPosition - options.pie.callout.offsetY + d.textOffsetY
+                    x: xPosition - pie.callout.offsetX,
+                    y: yPosition -
+                        pie.callout.offsetY +
+                        d.textOffsetY
                 };
                 // the intersection point of the vertical and horizontal line
                 d.intersectPointX =
-                    d.endPos.x + options.pie.callout.horizontalLineLength;
+                    d.endPos.x + pie.callout.horizontalLineLength;
             }
             // Store the necessary data in the DOM element
             return d;
@@ -25395,12 +25441,11 @@ var Pie$1 = /** @class */ (function (_super) {
     };
     // Helper functions
     Pie.prototype.computeRadius = function () {
-        var options = this.model.getOptions();
         var _a = DOMUtils.getSVGElementSize(this.parent, {
             useAttrs: true
         }), width = _a.width, height = _a.height;
         var radius = Math.min(width, height) / 2;
-        return radius + options.pie.radiusOffset;
+        return radius + pie.radiusOffset;
     };
     return Pie;
 }(Component));
@@ -25952,8 +25997,11 @@ var Skeleton = /** @class */ (function (_super) {
         var container = DOMUtils.appendOrSelect(svg, "svg.chart-skeleton")
             .attr("width", width)
             .attr("height", height);
-        var options = this.model.getOptions().pie;
-        var skeletonAreaContainer = DOMUtils.appendOrSelect(container, "rect.chart-skeleton-area-container")
+        var optionName = innerRadius === 0
+            ? "pie"
+            : "donut";
+        var alignment = Tools.getProperty(this.model.getOptions(), optionName, "alignment");
+        DOMUtils.appendOrSelect(container, "rect.chart-skeleton-area-container")
             .attr("width", width)
             .attr("height", height)
             .attr("fill", "none");
@@ -25963,21 +26011,30 @@ var Skeleton = /** @class */ (function (_super) {
             .startAngle(0)
             .endAngle(Math.PI * 2);
         // centering circle inside the container
-        var tcx = outerRadius + Math.abs(options.radiusOffset);
+        var tcx = outerRadius + Math.abs(pie.radiusOffset);
         var tcy = outerRadius + (Math.min(width, height) - outerRadius * 2) / 2;
-        DOMUtils.appendOrSelect(container, "path")
+        var skeletonAreaShape = DOMUtils.appendOrSelect(container, "path")
             .attr("class", "skeleton-area-shape")
             .attr("transform", "translate(" + tcx + ", " + tcy + ")")
             .attr("d", arcPathGenerator)
             .classed("shimmer-effect-areas", shimmer)
             .classed("empty-state-areas", !shimmer);
+        // Position skeleton
+        var translateX = outerRadius + pie.xOffset;
+        if (alignment === Alignments.CENTER) {
+            translateX = width / 2;
+        }
+        else if (alignment === Alignments.RIGHT) {
+            translateX = width - outerRadius - pie.xOffset;
+        }
+        var translateY = outerRadius + pie.yOffset;
+        skeletonAreaShape.attr("transform", "translate(" + translateX + ", " + translateY + ")");
     };
     // same logic in pie
     Skeleton.prototype.computeOuterRadius = function () {
-        var options = this.model.getOptions();
         var _a = DOMUtils.getSVGElementSize(this.parent.node().parentNode, { useAttrs: true }), width = _a.width, height = _a.height;
         var radius = Math.min(width, height) / 2;
-        return radius + options.pie.radiusOffset;
+        return radius + pie.radiusOffset;
     };
     // same logic in donut
     Skeleton.prototype.computeInnerRadius = function () {
@@ -26984,7 +27041,7 @@ var Axis$1 = /** @class */ (function (_super) {
                 numberOfTicks = axis.ticks.number;
                 if (isVerticalAxis) {
                     // Set how many ticks based on height
-                    numberOfTicks = this.getNumberOfFittingTicks(height, tickHeight, tickSpaceRatioVertical);
+                    numberOfTicks = this.getNumberOfFittingTicks(height, tickHeight, axis.ticks.verticalSpaceRatio);
                 }
             }
             // scale continuous
@@ -27168,7 +27225,7 @@ var Axis$1 = /** @class */ (function (_super) {
             // always rotate ticks if zoomDomain is changing to avoid rotation flips during zoomDomain changing
             if (rotateTicks || this.zoomDomainChanging) {
                 if (!isNumberOfTicksProvided) {
-                    axis$1.ticks(this.getNumberOfFittingTicks(width, tickHeight, tickSpaceRatioHorizontal));
+                    axis$1.ticks(this.getNumberOfFittingTicks(width, tickHeight, axis.ticks.horizontalSpaceRatio));
                     invisibleAxisRef.call(axis$1);
                     axisRef.call(axis$1);
                 }
@@ -28458,7 +28515,6 @@ var Grid = /** @class */ (function (_super) {
     };
     Grid.prototype.cleanGrid = function (g) {
         var options = this.model.getOptions();
-        g.selectAll("line").attr("stroke", options.grid.strokeColor);
         // Remove extra elements
         g.selectAll("text").remove();
         g.select(".domain").remove();
@@ -30248,15 +30304,14 @@ var Radar$1 = /** @class */ (function (_super) {
         };
         _this.handleLegendOnHover = function (event) {
             var hoveredElement = event.detail.hoveredElement;
-            var opacity = Tools.getProperty(_this.model.getOptions(), "radar", "opacity");
             _this.parent
                 .selectAll("g.blobs path")
                 .transition(_this.services.transitions.getTransition("legend-hover-blob"))
                 .style("fill-opacity", function (group) {
                 if (group.name !== hoveredElement.datum().name) {
-                    return Tools.getProperty(opacity, "unselected");
+                    return radar.opacity.unselected;
                 }
-                return Tools.getProperty(opacity, "selected");
+                return radar.opacity.selected;
             });
         };
         _this.handleLegendMouseOut = function (event) {
@@ -30288,7 +30343,7 @@ var Radar$1 = /** @class */ (function (_super) {
         var options = this.model.getOptions();
         var _b = Tools.getProperty(options, "radar", "axes"), angle = _b.angle, value = _b.value;
         var groupMapsTo = Tools.getProperty(options, "data", "groupMapsTo");
-        var _c = Tools.getProperty(options, "radar"), xLabelPadding = _c.xLabelPadding, yLabelPadding = _c.yLabelPadding, yTicksNumber = _c.yTicksNumber, minRange = _c.minRange, xAxisRectHeight = _c.xAxisRectHeight, opacity = _c.opacity;
+        var _c = radar, xLabelPadding = _c.xLabelPadding, yLabelPadding = _c.yLabelPadding, yTicksNumber = _c.yTicksNumber, minRange = _c.minRange, xAxisRectHeight = _c.xAxisRectHeight;
         this.uniqueKeys = Array.from(new Set(data.map(function (d) { return d[angle]; })));
         this.uniqueGroups = Array.from(new Set(data.map(function (d) { return d[groupMapsTo]; })));
         this.displayDataNormalized = this.normalizeFlatData(displayData);
@@ -30394,48 +30449,6 @@ var Radar$1 = /** @class */ (function (_super) {
                     .attr("d", function (tick) {
                     return radialLineGenerator(shapeData(tick));
                 })
-                    .attr("opacity", 0)
-                    .remove();
-            });
-        });
-        // y labels (show only the min and the max labels)
-        var yLabels = DOMUtils.appendOrSelect(svg, "g.y-labels").attr("role", Roles.GROUP);
-        var yLabelUpdate = yLabels.selectAll("text").data(extent(yTicks));
-        yLabelUpdate.join(function (enter) {
-            return enter
-                .append("text")
-                .attr("opacity", 0)
-                .text(function (tick) { return tick; })
-                .attr("x", function (tick) {
-                return polarToCartesianCoords(-Math.PI / 2, yScale(tick), c).x + yLabelPadding;
-            })
-                .attr("y", function (tick) {
-                return polarToCartesianCoords(-Math.PI / 2, yScale(tick), c).y;
-            })
-                .style("text-anchor", "start")
-                .style("dominant-baseline", "middle")
-                .call(function (selection) {
-                return selection
-                    .transition(_this.services.transitions.getTransition("radar_y_labels_enter", animate))
-                    .attr("opacity", 1);
-            });
-        }, function (update) {
-            return update.call(function (selection) {
-                return selection
-                    .transition(_this.services.transitions.getTransition("radar_y_labels_update", animate))
-                    .text(function (tick) { return tick; })
-                    .attr("opacity", 1)
-                    .attr("x", function (tick) {
-                    return polarToCartesianCoords(-Math.PI / 2, yScale(tick), c).x + yLabelPadding;
-                })
-                    .attr("y", function (tick) {
-                    return polarToCartesianCoords(-Math.PI / 2, yScale(tick), c).y;
-                });
-            });
-        }, function (exit) {
-            return exit.call(function (selection) {
-                return selection
-                    .transition(_this.services.transitions.getTransition("radar_y_labels_exit", animate))
                     .attr("opacity", 0)
                     .remove();
             });
@@ -30555,7 +30568,7 @@ var Radar$1 = /** @class */ (function (_super) {
                 .attr("opacity", 0)
                 .attr("transform", "translate(" + c.x + ", " + c.y + ")")
                 .attr("fill", function (group) { return colorScale(group.name); })
-                .style("fill-opacity", opacity.selected)
+                .style("fill-opacity", radar.opacity.selected)
                 .attr("stroke", function (group) { return colorScale(group.name); })
                 .attr("d", function (group) { return oldRadialLineGenerator(group.data); })
                 .call(function (selection) {
@@ -30618,6 +30631,48 @@ var Radar$1 = /** @class */ (function (_super) {
             .attr("fill", "red")
             .style("fill-opacity", 0)
             .attr("transform", function (key) { return "rotate(" + radToDeg(xScale(key)) + ", " + c.x + ", " + c.y + ")"; });
+        // y labels (show only the min and the max labels)
+        var yLabels = DOMUtils.appendOrSelect(svg, "g.y-labels").attr("role", Roles.GROUP);
+        var yLabelUpdate = yLabels.selectAll("text").data(extent(yTicks));
+        yLabelUpdate.join(function (enter) {
+            return enter
+                .append("text")
+                .attr("opacity", 0)
+                .text(function (tick) { return tick; })
+                .attr("x", function (tick) {
+                return polarToCartesianCoords(-Math.PI / 2, yScale(tick), c).x + yLabelPadding;
+            })
+                .attr("y", function (tick) {
+                return polarToCartesianCoords(-Math.PI / 2, yScale(tick), c).y;
+            })
+                .style("text-anchor", "start")
+                .style("dominant-baseline", "middle")
+                .call(function (selection) {
+                return selection
+                    .transition(_this.services.transitions.getTransition("radar_y_labels_enter", animate))
+                    .attr("opacity", 1);
+            });
+        }, function (update) {
+            return update.call(function (selection) {
+                return selection
+                    .transition(_this.services.transitions.getTransition("radar_y_labels_update", animate))
+                    .text(function (tick) { return tick; })
+                    .attr("opacity", 1)
+                    .attr("x", function (tick) {
+                    return polarToCartesianCoords(-Math.PI / 2, yScale(tick), c).x + yLabelPadding;
+                })
+                    .attr("y", function (tick) {
+                    return polarToCartesianCoords(-Math.PI / 2, yScale(tick), c).y;
+                });
+            });
+        }, function (exit) {
+            return exit.call(function (selection) {
+                return selection
+                    .transition(_this.services.transitions.getTransition("radar_y_labels_exit", animate))
+                    .attr("opacity", 0)
+                    .remove();
+            });
+        });
         var alignment = Tools.getProperty(options, "radar", "alignment");
         var alignmentOffset = DOMUtils.getAlignmentOffset(alignment, svg, this.getParent());
         svg.attr("transform", "translate(" + alignmentOffset + ", 0)");
@@ -30639,7 +30694,7 @@ var Radar$1 = /** @class */ (function (_super) {
     };
     Radar.prototype.addEventListeners = function () {
         var self = this;
-        var _a = Tools.getProperty(this.model.getOptions(), "radar"), angle = _a.axes.angle, dotsRadius = _a.dotsRadius;
+        var angle = Tools.getProperty(this.model.getOptions(), "radar").axes.angle;
         // events on x axes rects
         this.parent
             .selectAll(".x-axes-rect > rect")
@@ -30658,7 +30713,7 @@ var Radar$1 = /** @class */ (function (_super) {
                 .attr("stroke-dasharray", "4 4");
             dots.classed("hovered", true)
                 .attr("opacity", 1)
-                .attr("r", dotsRadius);
+                .attr("r", radar.dotsRadius);
             // get the items that should be highlighted
             var itemsToHighlight = self.displayDataNormalized.filter(function (d) { return d[angle] === datum; });
             var options = self.model.getOptions();

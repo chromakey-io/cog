@@ -2,19 +2,20 @@ import datetime
 
 from tortoise import fields, models
 
-class Subject(models.Model):
+class SubjectModel(models.Model):
     id = fields.IntField(pk=True)
- 
-    research_id = fields.CharField(max_length=255)
+
+    research_id = fields.CharField(max_length=255, required=True)
 
     identity = fields.CharField(max_length=255)
     birthdate = fields.DateField()
-    identifier = fields.CharField(max_length=255)
 
     trials: fields.ReverseRelation['Trial']
     
     active = fields.BooleanField(default=True)
     created_at = fields.DatetimeField(auto_now_add=True)
+
+    trials: fields.ReverseRelation["TrialModel"]
 
     @property
     def name(self):
