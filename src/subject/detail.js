@@ -269,7 +269,7 @@ export class SubjectDetail extends LitElement {
     }
 
     async handler() {
-        const response = await fetch(`/subject/${this.id}`, {
+        const response = await fetch(`/subjects/${this.id}`, {
                 method: 'GET',
                 headers: {
                     Authorization: 'Bearer: ' + this._token
