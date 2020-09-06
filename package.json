@@ -16,25 +16,30 @@
   },
   "homepage": "https://github.com/chromakey-io/cog#readme",
   "devDependencies": {
-    "@babel/core": "^7.11.1",
-    "@babel/preset-env": "^7.11.0",
-    "@material/typography": "^8.0.0-canary.096a7a066.0",
-    "@rollup/plugin-commonjs": "^14.0.0",
-    "@rollup/plugin-node-resolve": "^8.4.0",
-    "node-sass": "^4.14.1",
-    "rollup": "^2.23.1",
-    "rollup-plugin-babel": "^4.4.0",
-    "rollup-plugin-lit-css": "^2.0.4",
-    "rollup-plugin-postcss": "^3.1.5",
-    "rollup-plugin-postcss-lit": "^0.2.2",
-    "rollup-plugin-terser": "^7.0.0"
+    "@babel/core": "latest",
+    "@babel/preset-env": "latest",
+    "@rollup/plugin-commonjs": "latest",
+    "@rollup/plugin-node-resolve": "latest",
+    "node-sass": "latest",
+    "rollup": "latest",
+    "@rollup/plugin-babel": "latest",
+    "rollup-plugin-lit-css": "latest",
+    "rollup-plugin-postcss": "latest",
+    "rollup-plugin-postcss-lit": "latst",
+    "rollup-plugin-terser": "latest"
   },
   "dependencies": {
     "@auth0/auth0-spa-js": "latest",
+    "flatpickr": "latest",
+    "lit-element": "latest",
+    "lit-html": "latest",
+    "carbon-components": "latest",
+    "carbon-web-components": "latest",
     "@carbon/charts": "latest",
     "@carbon/icon-helpers": "latest",
     "@carbon/icons": "latest",
     "@carbon/themes": "latest",
+    "@material/theme": "latest",
     "@material/data-table": "latest",
     "@material/layout-grid": "latest",
     "@material/mwc-button": "latest",
@@ -48,12 +53,8 @@
     "@material/mwc-snackbar": "latest",
     "@material/mwc-textfield": "latest",
     "@material/mwc-top-app-bar-fixed": "latest",
-    "@material/theme": "^8.0.0-canary.096a7a066.0",
-    "carbon-components": "latest",
-    "carbon-web-components": "latest",
-    "d3": "latest",
-    "lit-element": "latest",
-    "lit-html": "latest",
-    "material-web-components-layout-grid": "^0.12.1"
+    "material-web-components-layout-grid": "laset",
+    "d3": "latest"
+
   }
 }
