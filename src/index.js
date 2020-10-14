@@ -17,24 +17,22 @@ import Typography from './typography.scss';
 import { LinearProgress } from '@material/mwc-linear-progress';
 
 async function load(e) {
-
-    /* set nav icon to a brain */
+    /* start progress spinner */
     const progress = document.querySelector('#page-load-progress');
-
+ 
+    /* set nav icon to a brain */
     const logo = document.getElementById('logo');
     const logo_brain = toSVG({...CognitiveIcon, attrs: CognitiveIcon.attrs});
     logo.appendChild(logo_brain);
 
+    /* inline import of authorization code */
     const {Authorize} = await import('./authorize.js');
-
-    const content = document.querySelector('#content');
 
     const auth = new Authorize();
     await auth.init();
 
-
     const user = await auth.user();
-    console.log(user);
+
     document.getElementById('user-welcome').innerHTML = `${user.name}`;
 
     const bootstrap = await fetch('/bootstrap', {
@@ -45,7 +43,10 @@ async function load(e) {
             });
 
 
+    /* inline import of subject list */
     const {SubjectList} = await import('./subject/list.js');
+
+    const content = document.querySelector('#content');
 
     let list = new SubjectList({'token': auth.token});
     content.appendChild(list);
@@ -70,6 +71,7 @@ async function load(e) {
 
     const {ErrorMessage} = await import ('./utils.js');
 
+    /* stop and remove progress indicator */
     progress.remove();
 
     const error = new ErrorMessage({'message':"LOADING COMPLETE"});
